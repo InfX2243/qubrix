@@ -54,7 +54,9 @@ export function ModuleDetail() {
       </section>
 
       <LessonList module={module} />
-\n      {getAssessmentsForModule(module.id).map((assessment) => { const summary = getSummary(assessment.id); return <section className="module-assessment-section" key={assessment.id}><div className="module-assessment-copy"><Badge tone="purple">Module assessment</Badge><h2>{assessment.title}</h2><p>{assessment.description}</p></div><div className="module-assessment-status"><strong>{summary.latest ? `${summary.latest.percentage}%` : "Not started"}</strong><span>{summary.latest ? (summary.latest.passed ? "Passed" : "Needs review") : `${assessment.questions.length} questions · Pass ${assessment.passingScore}%`}</span><Button variant={summary.latest?.passed ? "secondary" : "primary"} onClick={() => navigate(`/assessments/${assessment.id}`)}>{summary.latest ? "Review Assessment" : "Start Assessment"}</Button></div></section>; })}\n
+
+      {getAssessmentsForModule(module.id).map((assessment) => { const summary = getSummary(assessment.id); return <section className="module-assessment-section" key={assessment.id}><div className="module-assessment-copy"><Badge tone="purple">Module assessment</Badge><h2>{assessment.title}</h2><p>{assessment.description}</p></div><div className="module-assessment-status"><strong>{summary.latest ? `${summary.latest.percentage}%` : "Not started"}</strong><span>{summary.latest ? (summary.latest.passed ? "Passed" : "Needs review") : `${assessment.questions.length} questions · Pass ${assessment.passingScore}%`}</span><Button variant={summary.latest?.passed ? "secondary" : "primary"} onClick={() => navigate(`/assessments/${assessment.id}`)}>{summary.latest ? "Review Assessment" : "Start Assessment"}</Button></div></section>; })}
+
       {percent === 100 && (
         <div className="module-complete-banner">
           <CheckCircle2 size={19} />
