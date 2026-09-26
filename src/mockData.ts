@@ -303,20 +303,6 @@ export function getContinueLesson(completedIds: string[]) {
   return learningLessons.find((lesson) => !completedIds.includes(lesson.id)) ?? learningLessons[learningLessons.length - 1];
 }
 
-export const moduleProgress = getAllModuleProgress(initialCompletedLessonIds);
-
-export const lessons = [
-  { title: "Superposition", module: "Quantum Fundamentals", progress: 72, duration: "8 min", featured: true },
-  { title: "The H Gate", module: "Quantum Gates", progress: 0, duration: "6 min", featured: false },
-  { title: "Entanglement", module: "Quantum Concepts", progress: 0, duration: "10 min", featured: false },
-];
-
-export const recommendedLesson = {
-  title: "Superposition",
-  module: "Quantum Computing Fundamentals",
-  reason: "Build on your completed basis-state lessons and see how H creates an equal superposition.",
-  duration: "8 min",
-};
 
 export const assessments = [
   { title: "Quantum Fundamentals Checkpoint", questions: 8, score: 90, status: "Completed" },
