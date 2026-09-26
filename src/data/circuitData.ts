@@ -4,7 +4,7 @@ import { CircleDot, GitBranch, Ruler, Sparkles, Square, Triangle } from "lucide-
 export type GateType = "X" | "Y" | "Z" | "H" | "S" | "T" | "CNOT" | "MEASURE";
 export type GateFamily = "single" | "multi" | "measurement";
 export type Framework = "Qiskit Aer" | "PennyLane" | "Cirq" | "qBraid";
-export type CodeFramework = "Qiskit" | "PennyLane" | "Cirq";
+export type CodeFramework = "Qiskit" | "PennyLane" | "Cirq" | "qBraid";
 
 export interface GateDefinition {
   type: GateType;
@@ -159,6 +159,17 @@ export function generateCode(circuit: CircuitState, framework: CodeFramework): s
       "",
       gates.some((gate) => gate.type === "MEASURE") ? "result = circuit()" : "# No measurement operation in this mock circuit",
     ].join("\n");
+  }
+  if (framework === "qBraid") {
+    return [
+      "# qBraid mock representation",
+      "# Execution is handled by the Qubrix frontend mock engine.",
+      "",
+      `circuit = ${circuit.qubits} qubit${circuit.qubits === 1 ? "" : "s"}`,
+      ...gates.map((gate) => `# ${gate.type} q${gate.qubit}${gate.targetQubit !== undefined ? ` -> q${gate.targetQubit}` : ""}`),
+      "",
+      "# Mock Quantum Environment",
+    ].join("\\n");
   }
   return [
     "import cirq",
