@@ -229,7 +229,7 @@ export function CircuitDesigner() {
     if (!selectedGateType && !selectedGateId) return;
     if (column >= MAX_COLUMNS) { notify("This circuit has reached the supported column limit.", "error"); return; }
     const occupied = gateAt(circuit, column, qubit);
-    if (occupied) { notify("That qubit slot is already occupied.", "error"); return; }
+    if (occupied && occupied.id !== selectedGateId && selectedGateType === "CNOT") { notify("CNOT needs two empty qubit slots in the same column.", "error"); return; }
     if (selectedGateType === "CNOT") {
       if (!pendingCnotControl) {
         setPendingCnotControl({ column, qubit });
@@ -238,16 +238,30 @@ export function CircuitDesigner() {
       }
       if (pendingCnotControl.column !== column) { notify("CNOT control and target must share the same operation column.", "error"); return; }
       if (pendingCnotControl.qubit === qubit) { notify("CNOT needs a different target qubit.", "error"); return; }
-      const id = newId();
-      setCircuit((current) => ({ ...current, gates: [...current.gates, { id, type: "CNOT", column, qubit: pendingCnotControl.qubit, targetQubit: qubit }] }));
+      const id = selectedGateId ?? newId();
+      setCircuit((current) => ({ ...current, gates: [...current.gates.filter((gate) => gate.id !== selectedGateId), { id, type: "CNOT", column, qubit: pendingCnotControl.qubit, targetQubit: qubit }] }));
       setSelectedGateId(id);
       clearPlacement();
-      notify("CNOT placed.", "success");
+      notify(selectedGateId ? "CNOT moved." : "CNOT placed.", "success");
       return;
     }
-    if (selectedGateId) {
+    if (selectedGateType && selectedGateType !== "CNOT" && occupied && occupied.id !== selectedGateId) {
+      const id = newId();
+      setCircuit((current) => ({ ...current, gates: [...current.gates.filter((gate) => gate.id !== occupied.id), { id, type: selectedGateType, column, qubit }] }));
+      setSelectedGateId(id);
+      clearPlacement();
+      notify(`${getGateDefinition(selectedGateType).name} replaced the existing operation.`, "success");
+      return;
+    }
+    if (selectedGateId && !selectedGateType) {
+      const selectedCurrent = circuit.gates.find((gate) => gate.id === selectedGateId);
+      if (selectedCurrent?.type === "CNOT") {
+        setPendingCnotControl({ column, qubit });
+        setSelectedGateType("CNOT");
+        notify(`q${qubit} selected as the new CNOT control. Choose its target.`, "neutral");
+        return;
+      }
       setCircuit((current) => ({ ...current, gates: current.gates.map((gate) => gate.id === selectedGateId ? { ...gate, column, qubit } : gate) }));
-      setSelectedGateId(selectedGateId);
       clearPlacement();
       notify("Gate moved.", "success");
       return;
