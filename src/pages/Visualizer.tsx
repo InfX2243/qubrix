@@ -26,7 +26,8 @@ function Summary({ result }: { result: SimulationResult }) {
 export function Visualizer() {
   const navigate = useNavigate();
   const { history, selectedResult, latestResult, selectResult } = useSimulation();
-  const result = selectedResult ?? latestResult;\n  const explainVisualization = () => { if (result?.status === "SUCCESS") navigate("/tutor", { state: { tutorContext: { source: "visualization", visualization: tab === "overview" ? "histogram" : tab as "histogram" | "statevector" | "bloch" | "circuit", circuitSnapshot: result.circuitSnapshot, simulationResult: result, returnPath: "/visualizer" } } }); };
+  const result = selectedResult ?? latestResult;
+  const explainVisualization = () => { if (result?.status === "SUCCESS") navigate("/tutor", { state: { tutorContext: { source: "visualization", visualization: tab === "overview" ? "histogram" : tab as "histogram" | "statevector" | "bloch" | "circuit", circuitSnapshot: result.circuitSnapshot, simulationResult: result, returnPath: "/visualizer" } } }); };
   const [tab, setTab] = useState("overview");
   const hasResult = result?.status === "SUCCESS";
   const resultNotice = useMemo(() => result?.status === "ERROR" ? result.error ?? "This simulation did not produce visualization data." : null, [result]);
