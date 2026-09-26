@@ -29,6 +29,7 @@ function contextTitle(context: TutorContext) {
   if (context.source === "circuit") return context.selectedGate ? `${context.selectedGate.type} gate · current circuit` : "Current circuit";
   if (context.source === "simulation") return "Current simulation result";
   if (context.source === "visualization") return `${context.visualization ? context.visualization[0].toUpperCase() + context.visualization.slice(1) : "Current"} visualization`;
+  if (context.source === "assessment") return context.assessmentTitle ?? "Assessment review";
   return "Quantum learning";
 }
 
@@ -45,7 +46,7 @@ function ContextCard({ context, collapsed, onToggle }: { context: TutorContext; 
       {context.selectedGate && <div><span>Selected gate</span><strong>{context.selectedGate.type} · q{context.selectedGate.qubit}{context.selectedGate.targetQubit !== undefined ? ` → q${context.selectedGate.targetQubit}` : ""}</strong></div>}
       {context.circuitSnapshot && <div><span>Current circuit</span><strong>{context.circuitSnapshot.qubits} qubits · {context.circuitSnapshot.gates.length} operations</strong><small>{context.circuitSnapshot.gates.map((gate) => gate.type === "CNOT" ? `CNOT q${gate.qubit}→q${gate.targetQubit}` : `${gate.type} q${gate.qubit}`).join(" · ") || "Empty circuit"}</small></div>}
       {result && <div className="tutor-result-context"><span>Simulation</span><strong>{result.framework} · {result.shots.toLocaleString()} shots</strong><small>{Object.entries(result.probabilities).slice(0, 4).map(([state, probability]) => `|${state}⟩ ${(probability * 100).toFixed(1)}%`).join(" · ")}</small></div>}
-      {context.visualization && <div><span>Visualization</span><strong>{context.visualization === "bloch" ? "Bloch sphere" : context.visualization === "statevector" ? "Statevector" : context.visualization === "histogram" ? "Measurement histogram" : "Executed circuit"}</strong></div>}
+      {context.visualization && <div><span>Visualization</span><strong>{context.visualization === "bloch" ? "Bloch sphere" : context.visualization === "statevector" ? "Statevector" : context.visualization === "histogram" ? "Measurement histogram" : "Executed circuit"}</strong></div>}{context.source === "assessment" && <div><span>Assessment question</span><strong>{context.question ?? "Submitted question"}</strong>{context.learnerAnswer !== undefined && <small>Your answer: {Array.isArray(context.learnerAnswer) ? context.learnerAnswer.join(", ") : context.learnerAnswer}</small>}</div>}
     </div>}
   </Card>;
 }
