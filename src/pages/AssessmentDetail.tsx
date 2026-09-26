@@ -6,6 +6,7 @@ import { Badge, Breadcrumb, Button, Card, EmptyState, PageHeader, ProgressBar } 
 import { getAssessment } from "../data/assessments";
 import { getLesson, getModule } from "../mockData";
 import { useAssessments } from "../context/AssessmentContext";
+import { useLearning } from "../context/LearningContext";
 import type { Assessment, AssessmentAnswer, AssessmentAttemptSummary, AssessmentQuestion } from "../types/assessment";
 
 export function AssessmentDetail() {
@@ -13,6 +14,7 @@ export function AssessmentDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   const { active, startAssessment, setAnswer, setQuestionIndex, submitQuestion, submitAssessment, resetAssessment, getSummary, canAttempt } = useAssessments();
+  const { continueLesson } = useLearning();
   const assessment = assessmentId ? getAssessment(assessmentId) : undefined;
   const [reviewOpen, setReviewOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function AssessmentDetail() {
   const module = getModule(assessment.moduleId);
 
   if (!isActive && summary.latest) {
-    return <AssessmentResults assessment={assessment} summary={summary} reviewOpen={reviewOpen} setReviewOpen={setReviewOpen} onRetake={() => { if (resetAssessment(assessment.id)) setReviewOpen(false); }} onContinue={() => navigate("/learn/module/" + assessment.moduleId)} onReviewLessons={() => navigate("/learn/module/" + assessment.moduleId)} />;
+    return <AssessmentResults assessment={assessment} summary={summary} reviewOpen={reviewOpen} setReviewOpen={setReviewOpen} onRetake={() => { if (resetAssessment(assessment.id)) setReviewOpen(false); }} onContinue={() => navigate("/learn/module/" + continueLesson.moduleId + "/lesson/" + continueLesson.id)} onReviewLessons={() => navigate("/learn/module/" + assessment.moduleId)} />;
   }
 
   if (!isActive) return <div className="assessment-detail-page">
