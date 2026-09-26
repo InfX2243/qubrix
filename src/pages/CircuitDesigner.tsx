@@ -355,7 +355,11 @@ export function CircuitDesigner() {
     navigate("/simulator");
   };
 
-  const askTutor = () => {\n    navigate("/tutor", { state: { tutorContext: { source: "circuit", selectedGate: selected ?? undefined, circuitSnapshot: cloneCircuit(circuit), topic: selected ? getGateDefinition(selected.type).description : undefined, returnPath: "/circuit-designer" } } });\n  };\n\n  const learnGate = () => {
+  const askTutor = () => {
+    navigate("/tutor", { state: { tutorContext: { source: "circuit", selectedGate: selected ?? undefined, circuitSnapshot: cloneCircuit(circuit), topic: selected ? getGateDefinition(selected.type).description : undefined, returnPath: "/circuit-designer" } } });
+  };
+
+  const learnGate = () => {
     if (selected?.type) navigate(`/learn/module/gates/lesson/${getGateDefinition(selected.type).learnLessonId}`);
   };
 
