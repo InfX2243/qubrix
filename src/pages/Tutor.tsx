@@ -91,7 +91,9 @@ function createWelcome(context: TutorContext, level: ExplanationLevel): ChatMess
         ? "I’m ready to explain the current circuit and any selected gate."
         : context.source === "simulation" || context.source === "visualization"
           ? "I’m ready to explain the selected mock simulation and visualization."
-          : "I’m ready to help you learn quantum computing.",
+          : context.source === "assessment"
+            ? "I’m ready to explain the submitted assessment question and help you learn from the feedback."
+            : "I’m ready to help you learn quantum computing.",
     sections: [{
       heading: module ? `Currently learning · ${module.title}` : "Start with a question",
       paragraphs: [level === "Beginner" ? "Ask in your own words. I’ll keep the explanation beginner-friendly and use the context shown above." : "Ask a question and I’ll adapt the explanation to your selected level."],
@@ -127,7 +129,7 @@ export function Tutor() {
     setMessages([createWelcome(context, level)]);
     setInput("");
     setTyping(false);
-  }, [context.source, context.lessonId, context.selectedGate?.id, context.simulationResult?.id, context.visualization]);
+  }, [context.source, context.lessonId, context.selectedGate?.id, context.simulationResult?.id, context.visualization, context.assessmentId, context.questionId]);
 
   const suggested = useMemo(() => getSuggestedQuestions(context), [context]);
   const send = (message = input) => {
@@ -151,7 +153,7 @@ export function Tutor() {
   };
 
   const backPath = context.returnPath ?? "/learn";
-  const backLabel = context.source === "lesson" ? "Back to Lesson" : context.source === "circuit" ? "Back to Circuit" : context.source === "simulation" ? "Back to Simulator" : context.source === "visualization" ? "Back to Visualizer" : "Back to Learn";
+  const backLabel = context.source === "lesson" ? "Back to Lesson" : context.source === "circuit" ? "Back to Circuit" : context.source === "simulation" ? "Back to Simulator" : context.source === "visualization" ? "Back to Visualizer" : context.source === "assessment" ? "Back to Assessment" : "Back to Learn";
 
   return <div className="tutor-page">
     <PageHeader eyebrow="Contextual learning assistant" title="Qubrix AI Tutor" description="Your learning assistant for quantum computing." action={<Button variant="secondary" onClick={() => navigate(backPath)}><ArrowLeft size={15} /> {backLabel}</Button>} />
