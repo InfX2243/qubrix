@@ -187,8 +187,8 @@ export function CircuitDesigner() {
   const [running, setRunning] = useState(false);
   const [runMessage, setRunMessage] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; tone?: "neutral" | "success" | "error" } | null>(null);
-  const [savedCircuits, setSavedCircuits] = useState<string[]>([]);
-  const [activeSaved, setActiveSaved] = useState<string | null>(null);
+  
+
   const selected = circuit.gates.find((gate) => gate.id === selectedGateId) ?? null;
   const code = useMemo(() => generateCode(circuit, codeFramework), [circuit, codeFramework]);
   const timerRef = useRef<number | null>(null);
@@ -224,7 +224,7 @@ export function CircuitDesigner() {
   const clearPlacement = () => { setSelectedGateType(null); setPendingCnotControl(null); };
 
   const placeOrMove = (column: number, qubit: number) => {
-    if (!selectedGateType) return;
+    if (!selectedGateType && !selectedGateId) return;
     if (column >= MAX_COLUMNS) { notify("This circuit has reached the supported column limit.", "error"); return; }
     const occupied = gateAt(circuit, column, qubit);
     if (occupied) { notify("That qubit slot is already occupied.", "error"); return; }
@@ -332,7 +332,7 @@ export function CircuitDesigner() {
     if (selected?.type) navigate(`/learn/module/gates/lesson/${getGateDefinition(selected.type).learnLessonId}`);
   };
 
-  const hasUnsupportedCode = codeFramework === "PennyLane" && circuit.gates.some((gate) => gate.type === "MEASURE") && circuit.gates.filter((gate) => gate.type === "MEASURE").length > 0;
+  const hasUnsupportedCode = codeFramework === "PennyLane" && circuit.gates.some((gate) => gate.type === "MEASURE");
   const codeNote = hasUnsupportedCode ? "Measurement is represented as a mock sample return in PennyLane." : "Code is generated deterministically from the visual circuit and is read-only.";
 
   return (
@@ -355,12 +355,12 @@ export function CircuitDesigner() {
       {runMessage && <Card className={`circuit-run-status ${running ? "is-running" : "is-success"}`}><div><span className="status-dot" /><strong>{runMessage}</strong><span>This is a frontend-only handoff point for the future Simulation Engine.</span></div>{!running && <Button variant="ghost" size="sm" onClick={() => setRunMessage(null)}>Dismiss <X size={13} /></Button>}</Card>}
 
       <div className="circuit-lower-grid">
-        <CodePanel codeFramework={codeFramework} onFrameworkChange={setCodeFramework} code={code} onCopy={() => navigator.clipboard?.writeText(code).then(() => notify("Generated code copied.", "success")).catch(() => notify("Copy is unavailable in this browser.", "error"))} />
+        <CodePanel codeFramework={codeFramework} onFrameworkChange={setCodeFramework} code={code} onCopy={() => navigator.clipboard ? navigator.clipboard.writeText(code).then(() => notify("Generated code copied.", "success")).catch(() => notify("Copy is unavailable in this browser.", "error")) : notify("Copy is unavailable in this browser.", "error")} />
         <Card className="circuit-context-card">
           <div className="circuit-panel-header"><div><span className="card-kicker">Learn connection</span><h2>Build with context</h2></div><Layers3 size={18} /></div>
           <p>Gate definitions are shared with the learning curriculum, so the designer can send you back to the existing lesson for the selected operation.</p>
           {selected ? <Button variant="ghost" size="sm" onClick={learnGate}><ExternalLink size={14} /> Learn {getGateDefinition(selected.type).name}</Button> : <span className="muted-small">Select a gate to reveal its lesson link.</span>}
-          {savedCircuits.length > 0 && <div className="saved-list"><span className="circuit-group-label">Recent local saves</span>{savedCircuits.map((name) => <button key={name} type="button" onClick={() => notify(`“${name}” is available only in this current mock session.`)}>{name}<ChevronDown size={12} /></button>)}</div>}
+          
         </Card>
       </div>
 
