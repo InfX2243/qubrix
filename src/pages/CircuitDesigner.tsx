@@ -134,7 +134,6 @@ function CircuitCanvas({ circuit, selectedId, selectedGateType, pendingCnotContr
 function Inspector({ selected, onDelete, onLearn }: { selected: CircuitGate | null; onDelete: () => void; onLearn: () => void }) {
   if (!selected) return <Card className="circuit-panel inspector-panel"><div className="inspector-empty"><Info size={22} /><strong>No gate selected</strong><span>Select a gate on the canvas to inspect or move it.</span></div></Card>;
   const definition = getGateDefinition(selected.type);
-  const Icon = definition.icon;
   return <Card className="circuit-panel inspector-panel">
     <div className="circuit-panel-header"><div><span className="card-kicker">Inspector</span><h2>Gate details</h2></div><Badge tone="purple">{definition.symbol}</Badge></div>
     <div className="inspector-gate"><div className="inspector-symbol">{definition.symbol}</div><div><h3>{definition.name}</h3><span>{definition.family === "single" ? "Single Qubit" : definition.family === "multi" ? "Multi Qubit" : "Measurement"}</span></div></div>
@@ -246,7 +245,7 @@ export function CircuitDesigner() {
       notify(selectedGateId ? "CNOT moved." : "CNOT placed.", "success");
       return;
     }
-    if (selectedGateType && selectedGateType !== "CNOT" && occupied && occupied.id !== selectedGateId) {
+    if (selectedGateType && occupied && occupied.id !== selectedGateId) {
       const id = newId();
       setCircuit((current) => ({ ...current, gates: [...current.gates.filter((gate) => gate.id !== occupied.id), { id, type: selectedGateType, column, qubit }] }));
       setSelectedGateId(id);
@@ -267,6 +266,7 @@ export function CircuitDesigner() {
       notify("Gate moved.", "success");
       return;
     }
+    if (!selectedGateType) return;
     const id = newId();
     setCircuit((current) => ({ ...current, gates: [...current.gates, { id, type: selectedGateType, column, qubit }] }));
     setSelectedGateId(id);
