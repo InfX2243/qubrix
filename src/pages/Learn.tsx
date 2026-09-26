@@ -44,7 +44,7 @@ export function Learn() {
 
       <section className="learning-assessment-strip">
         <SectionHeader title="Assessment progress" action={<button className="text-button" onClick={() => navigate("/assessments")}>View assessments <span aria-hidden="true">→</span></button>} />
-        <div className="learning-assessment-grid">{assessments.map((assessment) => { const summary = getSummary(assessment.id); return <Card key={assessment.id}><div className="learning-assessment-top"><Badge tone="purple">{assessment.title}</Badge><span>{summary.latest ? `${summary.latest.percentage}%` : "Not started"}</span></div><ProgressBar value={summary.latest?.percentage ?? 0} label={summary.latest ? "Latest score" : "Assessment readiness"} /><p>{summary.latest ? (summary.latest.passed ? "Passed — review or continue learning." : "Review the related lessons and try again.") : "Ready when you are."}</p></Card>; })}</div>
+        <div className="learning-assessment-grid">{assessments.map((assessment) => { const summary = getSummary(assessment.id); return <Card key={assessment.id} className="learning-assessment-card"><div className="learning-assessment-top"><Badge tone="purple">{assessment.title}</Badge><span className={summary.latest ? "learning-assessment-score" : "learning-assessment-score is-muted"}>{summary.latest ? `${summary.latest.percentage}%` : "Not started"}</span></div><ProgressBar value={summary.latest?.percentage ?? 0} label={summary.latest ? "Latest score" : "Assessment readiness"} /><p>{summary.latest ? (summary.latest.passed ? "Passed — review or continue learning." : "Review the related lessons and try again.") : "Ready when you are."}</p></Card>; })}</div>
       </section>
 
       <section className="curriculum-section">
