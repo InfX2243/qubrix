@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { BarChart3, CircleDot, GitBranch, Info, MousePointer2 } from "lucide-react";
 import { Badge, Card, Tabs } from "./ui";
 import type { CircuitGate, CircuitState } from "../data/circuitData";
@@ -25,7 +25,7 @@ export function MeasurementHistogram({ result }: { result: SimulationResult }) {
   const [mode, setMode] = useState<"probability" | "count">("probability");
   const [selected, setSelected] = useState<string | null>(null);
   const entries = Object.entries(result.probabilities).sort((a, b) => b[1] - a[1]);
-  const max = Math.max(...entries.map(([, value]) => mode === "probability" ? value * 100 : result.measurementCounts[_[0]] ?? 0), 1);
+  const max = Math.max(...entries.map(([state, value]) => mode === "probability" ? value * 100 : result.measurementCounts[state] ?? 0), 1);
   return <Card className="viz-card">
     <div className="viz-card-header"><div><span className="card-kicker">Measurements</span><h2>Measurement distribution</h2><p>Each bar uses the same probabilities and counts stored in the selected SimulationResult.</p></div><div className="viz-toggle" role="group" aria-label="Measurement display mode">
       <button type="button" className={mode === "probability" ? "is-active" : ""} onClick={() => setMode("probability")}>Probability</button>
@@ -101,7 +101,7 @@ export function CircuitResultView({ result }: { result: SimulationResult }) {
   const rows = Array.from({ length: result.qubitCount }, (_, q) => q);
   return <Card className="viz-card">
     <div className="viz-card-header"><div><span className="card-kicker">Executed circuit</span><h2>Circuit result</h2><p>This diagram is reconstructed from the selected SimulationResult.circuitSnapshot.</p></div><Badge tone="purple">{result.gateCount} gates</Badge></div>
-    <div className="circuit-result-scroll"><div className="circuit-result-grid" style={{ "--result-columns": columns } as React.CSSProperties}><div className="circuit-result-corner" />{Array.from({ length: columns }, (_, column) => <div className="circuit-result-column" key={column}>t{column + 1}</div>)}{rows.map(q => <div className="circuit-result-row" key={q}><strong>q{q}</strong>{Array.from({ length: columns }, (_, column) => {
+    <div className="circuit-result-scroll"><div className="circuit-result-grid" style={{ "--result-columns": columns } as CSSProperties}><div className="circuit-result-corner" />{Array.from({ length: columns }, (_, column) => <div className="circuit-result-column" key={column}>t{column + 1}</div>)}{rows.map(q => <div className="circuit-result-row" key={q}><strong>q{q}</strong>{Array.from({ length: columns }, (_, column) => {
       const gate = result.circuitSnapshot.gates.find(g => g.column === column && (g.qubit === q || (g.type === "CNOT" && g.targetQubit === q)));
       return <div className="circuit-result-cell" key={column}>{gate && <GateMark gate={gate} />}{gate?.type === "CNOT" && gate.targetQubit === q && <span className="circuit-result-target">⊕</span>}</div>;
     })}</div>)}</div></div>
