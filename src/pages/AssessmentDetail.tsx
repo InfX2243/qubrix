@@ -1,3 +1,4 @@
+import "./Assessments.css";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Bot, CheckCircle2, CircleAlert, FileCode2, RotateCcw } from "lucide-react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
