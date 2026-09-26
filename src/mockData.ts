@@ -15,7 +15,7 @@ export const currentUser: User = {
   name: "Alex Morgan",
   role: "Student",
   initials: "AM",
-  overallProgress: 62,
+  overallProgress: 61,
 };
 
 export const dashboardStats: DashboardStats = {
