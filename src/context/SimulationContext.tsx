@@ -10,9 +10,12 @@ interface SimulationContextValue {
   latestResult: SimulationResult | null;
   selectedResult: SimulationResult | null;
   history: SimulationResult[];
+  savedCircuit: CircuitState | null;
   setCircuit: (circuit: CircuitState) => void;
   setFramework: (framework: Framework) => void;
   setShots: (shots: number) => void;
+  saveCircuit: (circuit: CircuitState) => void;
+  loadSavedCircuit: () => CircuitState | null;
   selectResult: (result: SimulationResult) => void;
   execute: (circuit: CircuitState, framework: Framework, shots: number) => Promise<SimulationResult>;
 }
@@ -28,6 +31,26 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const [latestResult, setLatestResult] = useState<SimulationResult | null>(null);
   const [selectedResult, setSelectedResult] = useState<SimulationResult | null>(null);
   const [history, setHistory] = useState<SimulationResult[]>([]);
+  const [savedCircuit, setSavedCircuit] = useState<CircuitState | null>(() => {
+    try {
+      const raw = window.localStorage.getItem("qubrix.savedCircuit");
+      return raw ? JSON.parse(raw) as CircuitState : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const saveCircuit = useCallback((nextCircuit: CircuitState) => {
+    const snapshot = clone(nextCircuit);
+    setSavedCircuit(snapshot);
+    try {
+      window.localStorage.setItem("qubrix.savedCircuit", JSON.stringify(snapshot));
+    } catch {
+      // The in-memory saved circuit remains available if storage is unavailable.
+    }
+  }, []);
+
+  const loadSavedCircuit = useCallback(() => savedCircuit ? clone(savedCircuit) : null, [savedCircuit]);
 
   const setCircuit = useCallback((nextCircuit: CircuitState) => {
     setCircuitState(clone(nextCircuit));
@@ -67,9 +90,9 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   }, [setCircuit]);
 
   const value = useMemo(() => ({
-    circuit, framework, shots, status, latestResult, selectedResult, history,
-    setCircuit, setFramework, setShots, selectResult, execute
-  }), [circuit, framework, shots, status, latestResult, selectedResult, history, setCircuit, selectResult, execute]);
+    circuit, framework, shots, status, latestResult, selectedResult, history, savedCircuit,
+    setCircuit, setFramework, setShots, saveCircuit, loadSavedCircuit, selectResult, execute
+  }), [circuit, framework, shots, status, latestResult, selectedResult, history, savedCircuit, setCircuit, saveCircuit, loadSavedCircuit, selectResult, execute]);
 
   return <SimulationContext.Provider value={value}>{children}</SimulationContext.Provider>;
 }
