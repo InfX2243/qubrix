@@ -52,7 +52,7 @@ export const gateDefinitions: GateDefinition[] = [
 ];
 
 export const frameworks: Framework[] = ["Qiskit Aer", "PennyLane", "Cirq", "qBraid"];
-export const codeFrameworks: CodeFramework[] = ["Qiskit", "PennyLane", "Cirq"];
+export const codeFrameworks: CodeFramework[] = ["Qiskit", "PennyLane", "Cirq", "qBraid"];
 
 export const emptyCircuit = (qubits = 2): CircuitState => ({ qubits, gates: [] });
 
@@ -169,7 +169,7 @@ export function generateCode(circuit: CircuitState, framework: CodeFramework): s
       ...gates.map((gate) => `# ${gate.type} q${gate.qubit}${gate.targetQubit !== undefined ? ` -> q${gate.targetQubit}` : ""}`),
       "",
       "# Mock Quantum Environment",
-    ].join("\\n");
+    ].join("\n");
   }
   return [
     "import cirq",
