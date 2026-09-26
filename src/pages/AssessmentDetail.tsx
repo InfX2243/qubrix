@@ -150,6 +150,7 @@ function CodingAnswer({ question, answer, disabled, onChange }: { question: Asse
 }
 
 function formatAnswer(question: AssessmentQuestion, answer: string | string[]) {
+  if (question.type === "coding") return Array.isArray(answer) ? answer.join(", ") : answer || "No code submitted";
   if (Array.isArray(answer)) return answer.map((id) => question.options?.find((option) => option.id === id)?.label ?? id).join(", ");
   return question.options?.find((option) => option.id === answer)?.label ?? answer || "No answer";
 }
