@@ -7,6 +7,7 @@ interface AssessmentContextValue {
   results: AssessmentResult[];
   startAssessment: (assessmentId: string, questionIndex?: number) => boolean;
   setAnswer: (questionId: string, value: string | string[]) => void;
+  setQuestionIndex: (index: number) => void;
   submitQuestion: (assessmentId: string, questionId: string) => AssessmentAnswer | null;
   submitAssessment: (assessmentId: string, timeSpentSeconds?: number) => AssessmentResult | null;
   resetAssessment: (assessmentId: string) => boolean;
@@ -59,7 +60,7 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
     return true;
   }, [results]);
 
-  const setAnswer = useCallback((questionId: string, value: string | string[]) => {
+  const setQuestionIndex = useCallback((index: number) => {\n    setActive((current) => {\n      if (!current) return current;\n      const assessment = getAssessment(current.assessmentId);\n      if (!assessment) return current;\n      return { ...current, currentQuestionIndex: Math.max(0, Math.min(index, assessment.questions.length - 1)) };\n    });\n  }, []);\n\n  const setAnswer = useCallback((questionId: string, value: string | string[]) => {
     setActive((current) => current ? { ...current, answers: { ...current.answers, [questionId]: value } } : current);
   }, []);
 
@@ -125,7 +126,7 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
   const canAttempt = useCallback((assessmentId: string) => canAttemptInternal(results, assessmentId), [results]);
   const isCompleted = useCallback((assessmentId: string) => results.some((item) => item.assessmentId === assessmentId), [results]);
 
-  const value = useMemo(() => ({ active, results, startAssessment, setAnswer, submitQuestion, submitAssessment, resetAssessment, getSummary, canAttempt, isCompleted }), [active, results, startAssessment, setAnswer, submitQuestion, submitAssessment, resetAssessment, getSummary, canAttempt, isCompleted]);
+  const value = useMemo(() => ({ active, results, startAssessment, setQuestionIndex, setAnswer, submitQuestion, submitAssessment, resetAssessment, getSummary, canAttempt, isCompleted }), [active, results, startAssessment, setQuestionIndex, setAnswer, submitQuestion, submitAssessment, resetAssessment, getSummary, canAttempt, isCompleted]);
   return <AssessmentContext.Provider value={value}>{children}</AssessmentContext.Provider>;
 }
 
