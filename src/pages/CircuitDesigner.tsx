@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { ChevronDown, CircleDot, Code2, Copy, ExternalLink, Info, Layers3, Minus, Play, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge, Button, Card, PageHeader, Select, Toast, Tooltip } from "../components/ui";
@@ -93,7 +93,7 @@ function CircuitCanvas({ circuit, selectedId, selectedGateType, pendingCnotContr
         <Badge tone={pendingCnotControl ? "cyan" : "neutral"}>{pendingCnotControl ? "Choose CNOT target" : `${circuit.qubits} qubits · ${columns.length} columns`}</Badge>
       </div>
       <div className="circuit-scroll" role="grid" aria-label="Quantum circuit editor">
-        <div className="circuit-grid" style={{ "--circuit-columns": columns.length } as React.CSSProperties}>
+        <div className="circuit-grid" style={{ "--circuit-columns": columns.length } as CSSProperties}>
           <div className="circuit-corner" />
           {columns.map((column) => <div className="circuit-column-label" key={column}>t{column}</div>)}
           {Array.from({ length: circuit.qubits }, (_, qubit) => (
