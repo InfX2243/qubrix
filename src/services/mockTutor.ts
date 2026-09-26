@@ -18,7 +18,14 @@ export interface TutorContext {
   circuitSnapshot?: CircuitState;
   simulationResult?: SimulationResult;
   visualization?: "histogram" | "statevector" | "bloch" | "circuit";
-  userProgress?: { overallProgress: number; completedLessonIds: string[] };\n  assessmentId?: string;\n  assessmentTitle?: string;\n  questionId?: string;\n  question?: string;\n  learnerAnswer?: string | string[];\n  correctAnswer?: string | string[];\n  explanation?: string;
+  userProgress?: { overallProgress: number; completedLessonIds: string[] };
+  assessmentId?: string;
+  assessmentTitle?: string;
+  questionId?: string;
+  question?: string;
+  learnerAnswer?: string | string[];
+  correctAnswer?: string | string[];
+  explanation?: string;
   returnPath?: string;
 }
 
@@ -116,7 +123,8 @@ function response(
 }
 
 export function getSuggestedQuestions(context: TutorContext): string[] {
-  if (context.source === "assessment") return ["Explain why my answer was wrong", "Explain the correct concept simply", "How does this relate to the lesson?", "Quiz me on this concept"];\n  if (context.source === "lesson" && context.lessonTitle) {
+  if (context.source === "assessment") return ["Explain why my answer was wrong", "Explain the correct concept simply", "How does this relate to the lesson?", "Quiz me on this concept"];
+  if (context.source === "lesson" && context.lessonTitle) {
     return [
       "Explain this concept simply",
       "Why does this matter?",
@@ -136,7 +144,18 @@ export function getSuggestedQuestions(context: TutorContext): string[] {
   return ["Explain qubits simply", "What is superposition?", "What does a CNOT do?", "What should I learn next?"];
 }
 
-function answerAssessment(context: TutorContext, level: ExplanationLevel) {\n  const question = context.question ?? "the submitted assessment question";\n  const explanation = context.explanation ?? "Review the related lesson and compare your reasoning with the submitted answer.";\n  const answerText = Array.isArray(context.learnerAnswer) ? context.learnerAnswer.join(", ") : context.learnerAnswer ?? "No answer recorded";\n  return response("explanation", `${levelPrefix(level)}the assessment has already been submitted, so I can explain the concept without changing the grade.`, [\n    { heading: "Question", paragraphs: [question] },\n    { heading: "Your submitted answer", paragraphs: [answerText] },\n    { heading: "Concept explanation", paragraphs: [explanation] },\n  ], context, context.lessonId, ["Explain this concept more simply", "Show me a related circuit", "What should I remember for the next attempt?"]);\n}\n\nfunction levelPrefix(level: ExplanationLevel) {
+function answerAssessment(context: TutorContext, level: ExplanationLevel) {
+  const question = context.question ?? "the submitted assessment question";
+  const explanation = context.explanation ?? "Review the related lesson and compare your reasoning with the submitted answer.";
+  const answerText = Array.isArray(context.learnerAnswer) ? context.learnerAnswer.join(", ") : context.learnerAnswer ?? "No answer recorded";
+  return response("explanation", `${levelPrefix(level)}the assessment has already been submitted, so I can explain the concept without changing the grade.`, [
+    { heading: "Question", paragraphs: [question] },
+    { heading: "Your submitted answer", paragraphs: [answerText] },
+    { heading: "Concept explanation", paragraphs: [explanation] },
+  ], context, context.lessonId, ["Explain this concept more simply", "Show me a related circuit", "What should I remember for the next attempt?"]);
+}
+
+function levelPrefix(level: ExplanationLevel) {
   if (level === "Beginner") return "At a beginner level, ";
   if (level === "Intermediate") return "At an intermediate level, ";
   return "Technically, ";
@@ -214,7 +233,8 @@ export function getTutorResponse(message: string, context: TutorContext, level: 
   const asksExample = topicMatch(message, "example", "show me");
   const asksWhy = topicMatch(message, "why", "matter");
   const asksSummary = topicMatch(message, "remember", "summary", "summarize", "key takeaway");
-  const asksCircuit = topicMatch(message, "circuit");\n  if (context.source === "assessment") return answerAssessment(context, level);
+  const asksCircuit = topicMatch(message, "circuit");
+  if (context.source === "assessment") return answerAssessment(context, level);
   const asksResult = topicMatch(message, "result", "histogram", "measurement", "shots", "probability");
   const topicGate = topicMatch(message, "cnot") ? "CNOT" : topicMatch(message, "hadamard", " h ", "h gate") ? "H" : topicMatch(message, "x gate", "pauli x") ? "X" : topicMatch(message, "y gate", "pauli y") ? "Y" : topicMatch(message, "z gate", "pauli z") ? "Z" : topicMatch(message, "s gate") ? "S" : topicMatch(message, "t gate") ? "T" : undefined;
 
@@ -241,7 +261,8 @@ export function getTutorResponse(message: string, context: TutorContext, level: 
       ], context, lesson.id, ["Quiz me on this lesson", "Explain the hardest part simply", "How does this relate to a circuit?"]);
     }
     if (asksExample) {
-      const example = lesson.circuit?.length ? lesson.circuit.join("\n") : lesson.example.description;
+      const example = lesson.circuit?.length ? lesson.circuit.join("
+") : lesson.example.description;
       return response("example", `${levelPrefix(level)}here is a concrete way to connect the lesson to practice.`, [
         { heading: lesson.example.title, paragraphs: [lesson.example.description], code: lesson.circuit?.length ? example : undefined },
       ], context, lesson.id, ["Explain this example", "Why does this work?", "What should I try next?"]);
