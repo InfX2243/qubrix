@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { ChevronDown, CircleDot, Code2, Copy, ExternalLink, Info, Layers3, Minus, Play, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
+import { Bot, ChevronDown, CircleDot, Code2, Copy, ExternalLink, Info, Layers3, Minus, Play, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge, Button, Card, PageHeader, Select, Toast, Tooltip } from "../components/ui";
 import {
