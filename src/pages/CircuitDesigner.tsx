@@ -375,7 +375,7 @@ export function CircuitDesigner() {
   const codeNote = hasUnsupportedCode ? "Measurement is represented as a mock sample return in PennyLane." : "Code is generated deterministically from the visual circuit and is read-only.";
 
   return (
-    <div>
+    <div className="circuit-designer-page">
       <PageHeader eyebrow="Qubrix workspace" title="Quantum Circuit Designer" description="Visually construct and experiment with quantum circuits, then inspect the framework-specific code that represents your current design." action={<Button onClick={runCircuit} disabled={running}><Play size={15} /> {running ? "Running…" : "Run Circuit"}</Button>} />
 
       <div className="circuit-toolbar">
