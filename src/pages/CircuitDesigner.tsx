@@ -132,7 +132,7 @@ function CircuitCanvas({ circuit, selectedId, selectedGateType, pendingCnotContr
   );
 }
 
-function Inspector({ selected, onDelete, onLearn }: { selected: CircuitGate | null; onDelete: () => void; onLearn: () => void }) {
+function Inspector({ selected, onDelete, onLearn, onTutor }: { selected: CircuitGate | null; onDelete: () => void; onLearn: () => void; onTutor: () => void }) {
   if (!selected) return <Card className="circuit-panel inspector-panel"><div className="inspector-empty"><Info size={22} /><strong>No gate selected</strong><span>Select a gate on the canvas to inspect or move it.</span></div></Card>;
   const definition = getGateDefinition(selected.type);
   return <Card className="circuit-panel inspector-panel">
@@ -354,7 +354,7 @@ export function CircuitDesigner() {
     navigate("/simulator");
   };
 
-  const learnGate = () => {
+  const askTutor = () => {\n    navigate("/tutor", { state: { tutorContext: { source: "circuit", selectedGate: selected ?? undefined, circuitSnapshot: cloneCircuit(circuit), topic: selected ? getGateDefinition(selected.type).description : undefined, returnPath: "/circuit-designer" } } });\n  };\n\n  const learnGate = () => {
     if (selected?.type) navigate(`/learn/module/gates/lesson/${getGateDefinition(selected.type).learnLessonId}`);
   };
 
@@ -375,7 +375,7 @@ export function CircuitDesigner() {
       <div className="circuit-workspace">
         <GatePalette selectedGate={selectedGateType} onSelect={chooseGate} />
         <CircuitCanvas circuit={circuit} selectedId={selectedGateId} selectedGateType={selectedGateType} pendingCnotControl={pendingCnotControl} onSlotClick={placeOrMove} onGateSelect={selectGate} />
-        <Inspector selected={selected} onDelete={deleteSelected} onLearn={learnGate} />
+        <Inspector selected={selected} onDelete={deleteSelected} onLearn={learnGate} onTutor={askTutor} />
       </div>
 
       {runMessage && <Card className={`circuit-run-status ${running ? "is-running" : "is-success"}`}><div><span className="status-dot" /><strong>{runMessage}</strong><span>This is a frontend-only handoff point for the future Simulation Engine.</span></div>{!running && <Button variant="ghost" size="sm" onClick={() => setRunMessage(null)}>Dismiss <X size={13} /></Button>}</Card>}
