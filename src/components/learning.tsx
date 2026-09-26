@@ -44,8 +44,9 @@ export function CurriculumCard({ module }: { module: LearningModule }) {
 export function LessonCard({ lesson, index }: { lesson: Lesson; index: number }) {
   const { isCompleted, completedLessonIds } = useLearning();
   const completed = isCompleted(lesson.id);
-  const priorCompleted = index === 0 || completedLessonIds.includes(lesson.id) || index > 0;
-  const status = completed ? "completed" : priorCompleted && index === 0 ? "in-progress" : "not-started";
+  const module = getModule(lesson.moduleId);
+  const firstIncompleteId = module?.lessons.find((item) => !completedLessonIds.includes(item.id))?.id;
+  const status = completed ? "completed" : lesson.id === firstIncompleteId ? "in-progress" : "not-started";
 
   return (
     <div className={`lesson-list-item ${completed ? "lesson-complete" : ""}`}>
@@ -70,7 +71,10 @@ export function LearningObjectiveList({ objectives }: { objectives: string[] }) 
 }
 
 export function ContinueLearningCard() {
-  const { continueLesson, isCompleted, overallProgress } = useLearning();
+  const { continueLesson, isCompleted, moduleProgress } = useLearning();
+  const module = getModule(continueLesson.moduleId);
+  const progress = moduleProgress.find((item) => item.name === module?.title);
+  const modulePercent = progress ? Math.round((progress.completed / progress.total) * 100) : 0;
   return (
     <Card className="continue-learning-card">
       <div className="continue-icon"><Sparkles size={19} /></div>
@@ -78,7 +82,7 @@ export function ContinueLearningCard() {
         <Badge tone="cyan">Continue learning</Badge>
         <h2>{continueLesson.title}</h2>
         <p>Pick up where your curriculum progress is currently pointing. {continueLesson.description}</p>
-        <ProgressBar value={overallProgress} label="Overall curriculum" />
+        <ProgressBar value={modulePercent} label="Module progress" />
         <div className="continue-meta"><span>{isCompleted(continueLesson.id) ? "All lessons complete" : continueLesson.duration}</span><span>·</span><span>{continueLesson.difficulty}</span></div>
       </div>
       <Link className="btn btn-primary" to={`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`}>{isCompleted(continueLesson.id) ? "Review lesson" : "Continue"} <Play size={14} /></Link>
