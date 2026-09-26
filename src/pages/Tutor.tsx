@@ -114,6 +114,15 @@ export function Tutor() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const onFollowup = (event: Event) => {
+      const question = (event as CustomEvent<string>).detail;
+      if (question) send(question);
+    };
+    window.addEventListener("qubrix-tutor-followup", onFollowup);
+    return () => window.removeEventListener("qubrix-tutor-followup", onFollowup);
+  });
+
+  useEffect(() => {
     setMessages([createWelcome(context, level)]);
     setInput("");
     setTyping(false);
