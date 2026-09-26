@@ -5,6 +5,7 @@ import { InteractiveExample } from "../components/InteractiveExample";
 import { MissingContent } from "../components/learning";
 import { Badge, Breadcrumb, Button, Card, PageHeader, ProgressBar, Toast } from "../components/ui";
 import { getLesson, getModule, getLessonIndex } from "../mockData";
+import { getAssessmentsForModule } from "../data/assessments";
 import { useLearning } from "../context/LearningContext";
 
 export function LessonDetail() {
@@ -29,7 +30,7 @@ export function LessonDetail() {
   const next = index < module.lessons.length - 1 ? module.lessons[index + 1] : undefined;
   const completeCount = module.lessons.filter((item) => completedLessonIds.includes(item.id)).length;
   const lessonProgress = Math.round(((index + (isCompleted(lesson.id) ? 1 : 0)) / module.lessons.length) * 100);
-  const completed = isCompleted(lesson.id);
+  const completed = isCompleted(lesson.id);\n  const moduleAssessment = getAssessmentsForModule(module.id)[0];
 
   const markComplete = () => {
     completeLesson(lesson.id);
@@ -62,7 +63,7 @@ export function LessonDetail() {
               <ul>{lesson.takeaways.map((takeaway) => <li key={takeaway}><CheckCircle2 size={16} /><span>{takeaway}</span></li>)}</ul>
             </section>
 
-            <div className={`lesson-completion ${completed ? "lesson-completion-done" : ""}`}>
+            {moduleAssessment && <section className="lesson-knowledge-check"><div><Badge tone="cyan">Knowledge Check</Badge><h2>Test your understanding</h2><p>Apply this lesson’s ideas in the {moduleAssessment.title} checkpoint. You can submit answers for feedback and review them with the AI Tutor.</p></div><Link className="btn btn-secondary" to={`/assessments/${moduleAssessment.id}`}>Open Knowledge Check <ArrowRight size={14} /></Link></section>}\n\n            <div className={`lesson-completion ${completed ? "lesson-completion-done" : ""}`}>
               <div><Badge tone={completed ? "success" : "purple"}>{completed ? "Completed" : "Ready to complete"}</Badge><h2>{completed ? "Nice work — lesson complete." : "Ready to mark this lesson complete?"}</h2><p>{completed ? "Your shared learning progress now includes this lesson." : "You can revisit this lesson later. Completing it updates the module and overall curriculum progress."}</p></div>
               <Button onClick={markComplete}><CheckCircle2 size={16} /> {completed ? "Completed" : "Mark as Complete"}</Button>
             </div>
