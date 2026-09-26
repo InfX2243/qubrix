@@ -115,15 +115,16 @@ export function Tutor() {
   const [typing, setTyping] = useState(false);
   const [contextCollapsed, setContextCollapsed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sendRef = useRef<(message?: string) => void>(() => undefined);
 
   useEffect(() => {
     const onFollowup = (event: Event) => {
       const question = (event as CustomEvent<string>).detail;
-      if (question) send(question);
+      if (question) sendRef.current(question);
     };
     window.addEventListener("qubrix-tutor-followup", onFollowup);
     return () => window.removeEventListener("qubrix-tutor-followup", onFollowup);
-  });
+  }, []);
 
   useEffect(() => {
     setMessages([createWelcome(context, level)]);
@@ -145,6 +146,8 @@ export function Tutor() {
       setTyping(false);
     }, 420);
   };
+
+  sendRef.current = send;
 
   const clear = () => {
     setMessages([createWelcome(context, level)]);

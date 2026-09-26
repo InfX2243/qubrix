@@ -22,7 +22,6 @@ export function Dashboard() {
         eyebrow="September 26"
         title={`Welcome back, ${currentUser.name.split(" ")[0]}`}
         description="Keep building your quantum intuition. Your next breakthrough is one experiment away."
-        action={<Button variant="secondary" onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}><BookOpen size={16} /> Continue learning</Button>}
       />
 
       <section className="dashboard-hero">
@@ -65,7 +64,6 @@ export function Dashboard() {
               <h3>{continueLesson.title}</h3>
               <p>{continueModule?.name} · {continueLesson.description}</p>
               <ProgressBar value={modulePercent} label="Module progress" />
-              <Button size="sm" onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}>Continue <ArrowRight size={14} /></Button>
             </div>
           </Card>
 
