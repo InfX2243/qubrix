@@ -1,5 +1,7 @@
+import { useEffect, useId, useRef } from "react";
 import type { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
 import { LoaderCircle, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 
@@ -36,8 +38,21 @@ export function Tabs({ items, value, onChange }: { items: Array<{ value: string;
 }
 
 export function Modal({ open, title, children, onClose, actions }: { open: boolean; title: string; children: ReactNode; onClose: () => void; actions?: ReactNode }) {
+  const titleId = useId();
+  const dialogRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    dialogRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   if (!open) return null;
-  return <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}><section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div className="modal-header"><h2 id="modal-title">{title}</h2><IconButton label="Close dialog" onClick={onClose}><X size={17} /></IconButton></div><div className="modal-body">{children}</div>{actions && <div className="modal-actions">{actions}</div>}</section></div>;
+  return <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}><section ref={dialogRef} className="modal" role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}><div className="modal-header"><h2 id={titleId}>{title}</h2><IconButton label="Close dialog" onClick={onClose}><X size={17} /></IconButton></div><div className="modal-body">{children}</div>{actions && <div className="modal-actions">{actions}</div>}</section></div>;
 }
 
 export function Tooltip({ label, children }: { label: string; children: ReactNode }) {
@@ -49,7 +64,7 @@ export function Dropdown({ label, children }: { label: ReactNode; children: Reac
 }
 
 export function Breadcrumb({ items }: { items: Array<{ label: string; href?: string }> }) {
-  return <nav className="breadcrumb-component" aria-label="Breadcrumb"><ol>{items.map((item, index) => <li key={item.label}>{index > 0 && <span aria-hidden="true">/</span>}{item.href ? <a href={item.href}>{item.label}</a> : <strong>{item.label}</strong>}</li>)}</ol></nav>;
+  return <nav className="breadcrumb-component" aria-label="Breadcrumb"><ol>{items.map((item, index) => <li key={item.label}>{index > 0 && <span aria-hidden="true">/</span>}{item.href ? <Link to={item.href}>{item.label}</Link> : <strong>{item.label}</strong>}</li>)}</ol></nav>;
 }
 
 export function ProgressBar({ value, label, showValue = true }: { value: number; label?: string; showValue?: boolean }) {
