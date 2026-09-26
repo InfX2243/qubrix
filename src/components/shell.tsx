@@ -4,6 +4,7 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { navItems, currentUser } from "../mockData";
 import type { RouteKey } from "../types";
 import { Avatar, Toast } from "./ui";
+import { useLearning } from "../context/LearningContext";
 
 const icons: Record<RouteKey, typeof Home> = {
   dashboard: Home,
@@ -21,6 +22,7 @@ export function AppShell() {
   const [collapsed, setCollapsed] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const location = useLocation();
+  const { overallProgress } = useLearning();
   const active = navItems.find((item) => item.path === location.pathname) ?? navItems[0];
 
   const notify = (message: string) => {
@@ -60,7 +62,7 @@ export function AppShell() {
               <summary className="profile-menu" aria-label="Open profile menu"><Avatar initials={currentUser.initials} name={currentUser.name} /><span className="profile-copy"><strong>{currentUser.name}</strong><small>{currentUser.role}</small></span><ChevronDown size={15} /></summary>
               <div className="profile-panel">
                 <strong>{currentUser.name}</strong>
-                <span>{currentUser.role} · {currentUser.overallProgress}% overall progress</span>
+                <span>{currentUser.role} · {overallProgress}% overall progress</span>
                 <button type="button" onClick={() => notify("Profile settings are mocked for this MVP.")}>Profile settings</button>
               </div>
             </details>
