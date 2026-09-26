@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { CircuitState, Framework } from "../data/circuitData";
 import { runSimulation, type SimulationResult } from "../services/mockSimulation";
 
@@ -29,31 +29,34 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const [selectedResult, setSelectedResult] = useState<SimulationResult | null>(null);
   const [history, setHistory] = useState<SimulationResult[]>([]);
 
-  const setCircuit = (c: CircuitState) => {
-    setCircuitState(clone(c));
-    if (status === "IDLE") setStatus("READY");
-  };
+  const setCircuit = useCallback((nextCircuit: CircuitState) => {
+    setCircuitState(clone(nextCircuit));
+    setStatus(current => current === "IDLE" ? "READY" : current);
+  }, []);
 
-  const selectResult = (result: SimulationResult) => {
+  const selectResult = useCallback((result: SimulationResult) => {
     setSelectedResult(result);
     setCircuitState(clone(result.circuitSnapshot));
     setFramework(result.framework);
     setShots(result.shots);
     setStatus(result.status);
-  };
+  }, []);
 
-  const execute = async (c: CircuitState, f: Framework, s: number) => {
-    setCircuit(c);
-    setFramework(f);
-    setShots(s);
+  const execute = useCallback(async (nextCircuit: CircuitState, nextFramework: Framework, nextShots: number) => {
+    setCircuit(nextCircuit);
+    setFramework(nextFramework);
+    setShots(nextShots);
     setStatus("VALIDATING");
-    const result = await runSimulation({ circuit: c, framework: f, shots: s });
+
+    const result = await runSimulation({ circuit: nextCircuit, framework: nextFramework, shots: nextShots });
+
     if (result.status === "ERROR") {
       setStatus("ERROR");
       setLatestResult(result);
       setSelectedResult(result);
       return result;
     }
+
     setStatus("RUNNING");
     await new Promise(resolve => window.setTimeout(resolve, 250));
     setStatus("SUCCESS");
@@ -61,12 +64,12 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
     setSelectedResult(result);
     setHistory(current => [result, ...current].slice(0, 12));
     return result;
-  };
+  }, [setCircuit]);
 
   const value = useMemo(() => ({
     circuit, framework, shots, status, latestResult, selectedResult, history,
     setCircuit, setFramework, setShots, selectResult, execute
-  }), [circuit, framework, shots, status, latestResult, selectedResult, history]);
+  }), [circuit, framework, shots, status, latestResult, selectedResult, history, setCircuit, selectResult, execute]);
 
   return <SimulationContext.Provider value={value}>{children}</SimulationContext.Provider>;
 }
