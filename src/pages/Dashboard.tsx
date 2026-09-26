@@ -8,7 +8,7 @@ export function Dashboard() {
   return (
     <div>
       <PageHeader
-        eyebrow="Monday, September 26"
+        eyebrow="September 26"
         title={`Welcome back, ${currentUser.name.split(" ")[0]}`}
         description="Keep building your quantum intuition. Your next breakthrough is one experiment away."
         action={<Button variant="secondary" onClick={() => navigate("/learn")}><BookOpen size={16} /> Continue learning</Button>}
