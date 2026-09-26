@@ -10,6 +10,7 @@ import { LearningProvider } from "./context/LearningContext";
 import { SimulationProvider } from "./context/SimulationContext";
 import { Simulator } from "./pages/Simulator";
 import { Visualizer } from "./pages/Visualizer";
+import { Tutor } from "./pages/Tutor";
 
 const previews = [
   { path: "/circuit-designer", title: "Circuit Designer", description: "Compose quantum circuits visually with gates, qubits, and operation columns.", label: "Visual circuit construction", action: "Open example circuit" },
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/circuit-designer" element={<CircuitDesigner />} />
           <Route path="/simulator" element={<Simulator />} />
           <Route path="/visualizer" element={<Visualizer />} />
+          <Route path="/tutor" element={<Tutor />} />
           {previews.filter((page) => !["/circuit-designer", "/simulator", "/visualizer"].includes(page.path)).map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />)}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
