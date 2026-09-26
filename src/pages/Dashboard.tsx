@@ -100,8 +100,8 @@ export function Dashboard() {
 
           <SectionHeader title="Assessment summary" action={<button className="text-button" onClick={() => navigate("/assessments")}>See all <ArrowRight size={14} /></button>} />
           <Card className="assessment-summary">
-            <div className="score-circle"><strong>90</strong><span>score</span></div>
-            <div><Badge tone="success">Completed</Badge><h3>Quantum Fundamentals</h3><p>8 questions · Last attempt yesterday</p></div>
+            <div className="score-circle"><strong>{featuredAssessmentSummary?.latest?.percentage ?? "—"}</strong><span>score</span></div>
+            <div><Badge tone={featuredAssessmentSummary?.latest ? (featuredAssessmentSummary.latest.passed ? "success" : "danger") : "neutral"}>{featuredAssessmentSummary?.latest ? (featuredAssessmentSummary.latest.passed ? "Passed" : "Needs review") : "Not started"}</Badge><h3>{featuredAssessment?.title ?? "Assessment"}</h3><p>{featuredAssessmentSummary?.latest ? `${featuredAssessmentSummary.latest.totalQuestions} questions · Last attempt ${new Date(featuredAssessmentSummary.latest.submittedAt).toLocaleDateString()}` : featuredAssessment ? `${featuredAssessment.questions.length} questions · No attempts yet` : "No assessment available"}</p></div>
             <Gauge size={21} className="assessment-gauge" />
           </Card>
         </div>
