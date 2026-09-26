@@ -3,6 +3,7 @@ import { BarChart3, Bell, BookOpen, BrainCircuit, ChevronDown, FlaskConical, Gra
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { navItems, currentUser } from "../mockData";
 import type { RouteKey } from "../types";
+import { Avatar, Toast } from "./ui";
 
 const icons: Record<RouteKey, typeof Home> = {
   dashboard: Home,
@@ -18,8 +19,14 @@ const icons: Record<RouteKey, typeof Home> = {
 export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
   const location = useLocation();
   const active = navItems.find((item) => item.path === location.pathname) ?? navItems[0];
+
+  const notify = (message: string) => {
+    setToast(message);
+    window.setTimeout(() => setToast(null), 2200);
+  };
 
   return (
     <div className="app-shell">
@@ -45,15 +52,23 @@ export function AppShell() {
         <header className="topbar">
           <div className="topbar-left">
             <button className="icon-button mobile-menu" aria-label="Open navigation" onClick={() => setMobileOpen(true)}><Menu size={20} /></button>
-            <div className="breadcrumbs" aria-label="Breadcrumb"><span>Qubrix</span><span>/</span><strong>{active.label}</strong></div>
+            <nav className="breadcrumbs" aria-label="Breadcrumb"><span>Qubrix</span><span>/</span><strong>{active.label}</strong></nav>
           </div>
           <div className="topbar-actions">
-            <button className="icon-button" aria-label="Notifications"><Bell size={19} /></button>
-            <button className="profile-menu" aria-label="Open profile menu"><span className="avatar">{currentUser.initials}</span><span className="profile-copy"><strong>{currentUser.name}</strong><small>{currentUser.role}</small></span><ChevronDown size={15} /></button>
+            <button className="icon-button" aria-label="Notifications" onClick={() => notify("No new notifications in this mock workspace.")}><Bell size={19} /></button>
+            <details className="profile-dropdown">
+              <summary className="profile-menu" aria-label="Open profile menu"><Avatar initials={currentUser.initials} name={currentUser.name} /><span className="profile-copy"><strong>{currentUser.name}</strong><small>{currentUser.role}</small></span><ChevronDown size={15} /></summary>
+              <div className="profile-panel">
+                <strong>{currentUser.name}</strong>
+                <span>{currentUser.role} · {currentUser.overallProgress}% overall progress</span>
+                <button type="button" onClick={() => notify("Profile settings are mocked for this MVP.")}>Profile settings</button>
+              </div>
+            </details>
           </div>
         </header>
         <main className="content-container"><Outlet /></main>
       </div>
+      {toast && <Toast message={toast} />}
     </div>
   );
 }
