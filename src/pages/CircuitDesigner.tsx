@@ -6,6 +6,7 @@ import {
   MAX_COLUMNS, MAX_QUBITS, codeFrameworks, emptyCircuit, frameworks, gateDefinitions, getGateDefinition, generateCode, presetCircuits,
 } from "../data/circuitData";
 import type { CodeFramework, CircuitGate, CircuitState, Framework } from "../data/circuitData";
+import { useSimulation } from "../context/SimulationContext";
 
 const newId = () => `gate-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -187,6 +188,8 @@ export function CircuitDesigner() {
   const [framework, setFramework] = useState<Framework>("Qiskit Aer");
   const [codeFramework, setCodeFramework] = useState<CodeFramework>("Qiskit");
   const [running, setRunning] = useState(false);
+  const [shots] = useState(1000);
+  const { setCircuit: setSimulationCircuit, setFramework: setSimulationFramework, execute: executeSimulation } = useSimulation();
   const [runMessage, setRunMessage] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; tone?: "neutral" | "success" | "error" } | null>(null);
   
@@ -196,6 +199,8 @@ export function CircuitDesigner() {
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => () => { if (timerRef.current) window.clearTimeout(timerRef.current); }, []);
+
+  useEffect(() => { setSimulationCircuit(circuit); setSimulationFramework(framework); }, [circuit, framework, setSimulationCircuit, setSimulationFramework]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -329,17 +334,22 @@ export function CircuitDesigner() {
     notify("Circuit saved locally for this mock session. No backend persistence is used.", "success");
   };
 
-  const runCircuit = () => {
+  const runCircuit = async () => {
     const error = validateCircuit(circuit);
     if (error) { notify(error, "error"); return; }
     if (!circuit.gates.length) { notify("Add at least one gate before running the circuit.", "error"); return; }
     setRunning(true);
-    setRunMessage("Preparing simulation...");
-    timerRef.current = window.setTimeout(() => {
-      setRunning(false);
-      setRunMessage(`Simulation ready · Mock execution prepared for ${framework}.`);
-      notify("Simulation ready. No real quantum execution was performed.", "success");
-    }, 850);
+    setRunMessage("Validating circuit...");
+    const result = await executeSimulation(circuit, framework, shots);
+    setRunning(false);
+    if (result.status === "ERROR") {
+      setRunMessage(result.error ?? "Simulation could not be completed.");
+      notify(result.error ?? "Simulation could not be completed.", "error");
+      return;
+    }
+    setRunMessage(`Simulation completed · ${framework} · ${shots.toLocaleString()} shots.`);
+    notify("Simulation completed. Mock results are ready.", "success");
+    navigate("/simulator");
   };
 
   const learnGate = () => {
