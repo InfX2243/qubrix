@@ -44,6 +44,8 @@ export interface AssessmentAnswer {
 
 export interface AssessmentResult {
   assessmentId: string;
+  moduleId: string;
+  lessonId?: string;
   attemptId: string;
   answers: AssessmentAnswer[];
   correctCount: number;
