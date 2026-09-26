@@ -7,7 +7,7 @@ import { getAssessment } from "../data/assessments";
 import { getLesson, getModule } from "../mockData";
 import { useAssessments } from "../context/AssessmentContext";
 import { useLearning } from "../context/LearningContext";
-import type { Assessment, AssessmentAnswer, AssessmentAttemptSummary, AssessmentQuestion } from "../types/assessment";
+import type { Assessment, AssessmentAttemptSummary, AssessmentQuestion } from "../types/assessment";
 
 export function AssessmentDetail() {
   const { assessmentId } = useParams();
