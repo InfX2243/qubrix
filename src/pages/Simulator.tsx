@@ -21,7 +21,7 @@ export function Simulator() {
   const explainResult = () => { if (latestResult?.status === "SUCCESS") navigate("/tutor", { state: { tutorContext: { source: "simulation", circuitSnapshot: latestResult.circuitSnapshot, simulationResult: latestResult, returnPath: "/simulator" } } }); };
   const statusLabel = status === "VALIDATING" ? "Validating circuit…" : status === "RUNNING" ? "Running on " + framework + "…" : status === "SUCCESS" ? "Simulation completed" : status === "ERROR" ? "Simulation could not be completed" : "Ready to simulate";
 
-  if (!circuit) return <div>
+  if (!circuit) return <div className="simulator-page">
     <PageHeader eyebrow="Simulation workspace" title="Simulator" description="Run deterministic frontend-only mock executions across supported quantum frameworks." />
     {savedCircuit ? <EmptyState title="Saved circuit is ready" description="Your saved circuit is available. Load it here or return to the Circuit Designer to edit it." action={<div className="sim-empty-actions"><Button onClick={() => { const loaded = loadSavedCircuit(); if (loaded) setCircuit(loaded); }}><Play size={15} /> Load Saved Circuit</Button><Button variant="secondary" onClick={() => navigate("/circuit-designer")}><ArrowLeft size={15} /> Edit Circuit</Button></div>} /> : <EmptyState title="No circuit ready to simulate" description="Build and save a circuit in the Circuit Designer first. No external simulator or quantum hardware is contacted." action={<Button onClick={() => navigate("/circuit-designer")}><ArrowLeft size={15} /> Open Circuit Designer</Button>} />}
   </div>;
