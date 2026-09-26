@@ -1,5 +1,6 @@
 import { ArrowRight, CheckCircle2, CircleAlert, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import "./Progress.css";
 import { Badge, Card, PageHeader, ProgressBar, SectionHeader } from "../components/ui";
 import { assessments } from "../data/assessments";
 import { getModule } from "../mockData";

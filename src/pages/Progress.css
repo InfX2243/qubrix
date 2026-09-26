@@ -1,0 +1,218 @@
+/* Progress page styling
+   Uses the shared Qubrix spacing, surface, typography, and responsive tokens.
+*/
+.progress-page {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.progress-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.progress-overview-grid .card {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-overview-grid p,
+.progress-next-card p {
+  margin: 0;
+  color: var(--slate);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.progress-big {
+  display: block;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.progress-module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.progress-module-card {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-module-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.progress-module-top h3 {
+  margin: 4px 0 0;
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.progress-module-top > strong {
+  flex: 0 0 auto;
+  color: var(--primary);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.progress-assessment-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--background);
+  color: var(--navy);
+  font-size: 10px;
+}
+
+.progress-assessment-mini svg {
+  flex: 0 0 auto;
+  color: var(--primary);
+}
+
+.progress-assessment-mini span {
+  color: var(--slate);
+}
+
+.progress-assessment-mini strong {
+  margin-left: auto;
+  font-size: 10px;
+}
+
+.progress-module-card .text-button {
+  justify-self: start;
+}
+
+.progress-history {
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-history-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) auto auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 17px;
+  border-bottom: 1px solid var(--border);
+}
+
+.progress-history-row:last-child {
+  border-bottom: 0;
+}
+
+.progress-history-row > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.progress-history-row > div strong {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.progress-history-row > div span,
+.progress-history-row > span {
+  color: var(--slate);
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.progress-history-row .badge {
+  white-space: nowrap;
+}
+
+.progress-next-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px;
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-next-card > svg {
+  flex: 0 0 auto;
+  color: var(--primary);
+}
+
+.progress-next-card > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.progress-next-card > div strong {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .progress-overview-grid,
+  .progress-module-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-history-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .progress-history-row > div {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .progress-page {
+    gap: 18px;
+  }
+
+  .progress-overview-grid .card,
+  .progress-module-card {
+    padding: 16px;
+  }
+
+  .progress-big {
+    font-size: 28px;
+  }
+
+  .progress-history-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 13px 15px;
+  }
+
+  .progress-history-row > div {
+    grid-column: auto;
+  }
+
+  .progress-history-row .badge {
+    justify-self: start;
+  }
+
+  .progress-next-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .progress-next-card .btn {
+    width: 100%;
+  }
+}
