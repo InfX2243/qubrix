@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Badge, Button, Card, PageHeader, Select, Toast, Tooltip } from "../components/ui";
 import {
   CodeFramework, CircuitGate, CircuitState, Framework, MAX_COLUMNS, MAX_QUBITS,
-  codeFrameworks, emptyCircuit, frameworks, frameworkShortLabel, gateDefinitions, getGateDefinition, generateCode, presetCircuits,
+  codeFrameworks, emptyCircuit, frameworks, gateDefinitions, getGateDefinition, generateCode, presetCircuits,
 } from "../data/circuitData";
 
 const newId = () => `gate-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -103,7 +103,9 @@ function CircuitCanvas({ circuit, selectedId, selectedGateType, pendingCnotContr
                 const gate = getGate(column, qubit);
                 const cnot = cnotAt(circuit, column);
                 const isCnotTarget = cnot?.targetQubit === qubit;
-                const isPending = pendingCnotControl?.column === column && pendingCnotControl.qubit === qubit;\n                const cnotMin = cnot ? Math.min(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;\n                const cnotMax = cnot ? Math.max(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;\n                const isCnotBetween = cnot ? qubit > cnotMin && qubit < cnotMax : false;
+                const isPending = pendingCnotControl?.column === column && pendingCnotControl.qubit === qubit;
+                const cnotMin = cnot ? Math.min(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;\n                const cnotMax = cnot ? Math.max(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;
+                const isCnotBetween = cnot ? qubit > cnotMin && qubit < cnotMax : false;
                 return (
                   <div className={`circuit-cell ${isPending ? "is-pending" : ""} ${selectedGateType ? "is-placeable" : ""}`} key={column}>
                     {cnot && cnot.qubit === qubit ? (
