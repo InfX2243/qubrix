@@ -155,7 +155,7 @@ export function generateCode(circuit: CircuitState, framework: CodeFramework): s
       "",
       "@qml.qnode(dev)",
       "def circuit():",
-      ...(gates.length ? gates.map((gate) => `    ${pennyLaneGate(gate)}`) : ["    pass"]),
+      ...(gates.filter((gate) => gate.type !== "MEASURE").length ? gates.filter((gate) => gate.type !== "MEASURE").map((gate) => `    ${pennyLaneGate(gate)}`) : ["    pass"]),
       "",
       "result = circuit()",
     ].join("\n");
