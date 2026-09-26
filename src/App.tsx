@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/learn/module/:moduleId" element={<ModuleDetail />} />
           <Route path="/learn/module/:moduleId/lesson/:lessonId" element={<LessonDetail />} />
           <Route path="/circuit-designer" element={<CircuitDesigner />} />
-          {previews.map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />)}
+          {previews.filter((page) => page.path !== "/circuit-designer").map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />)}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
