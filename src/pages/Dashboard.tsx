@@ -2,11 +2,16 @@ import { ArrowRight, BookOpen, BrainCircuit, CheckCircle2, CirclePlay, Clock3, F
 import { useNavigate } from "react-router-dom";
 import { activities, currentUser, dashboardStats, getModule } from "../mockData";
 import { useLearning } from "../context/LearningContext";
+import { assessments } from "../data/assessments";
+import { useAssessments } from "../context/AssessmentContext";
 import { Badge, Button, Card, PageHeader, ProgressBar, SectionHeader, StatCard } from "../components/ui";
 
 export function Dashboard() {
   const navigate = useNavigate();
   const { overallProgress, continueLesson, moduleProgress } = useLearning();
+  const { getSummary } = useAssessments();
+  const featuredAssessment = assessments[0];
+  const featuredAssessmentSummary = featuredAssessment ? getSummary(featuredAssessment.id) : null;
   const continueModuleDefinition = getModule(continueLesson.moduleId);
   const continueModule = continueModuleDefinition ? moduleProgress.find((item) => item.name === continueModuleDefinition.title) : undefined;
   const modulePercent = continueModule ? Math.round((continueModule.completed / continueModule.total) * 100) : 0;
