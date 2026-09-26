@@ -41,7 +41,7 @@ export default function App() {
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/assessments/:assessmentId" element={<AssessmentDetail />} />
           <Route path="/progress" element={<Progress />} />
-          {previews.filter((page) => !["/circuit-designer", "/simulator", "/visualizer", "/assessments", "/progress"].includes(page.path)).map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />}
+          {previews.filter((page) => !["/circuit-designer", "/simulator", "/visualizer", "/assessments", "/progress"].includes(page.path)).map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />)}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
