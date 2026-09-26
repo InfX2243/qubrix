@@ -145,6 +145,7 @@ function Inspector({ selected, onDelete, onLearn, onTutor }: { selected: Circuit
     </div>
     <div className="inspector-actions">
       {definition.learnLessonId && <Button variant="ghost" size="sm" onClick={onLearn}><ExternalLink size={14} /> Learn about this gate</Button>}
+      <Button variant="secondary" size="sm" onClick={onTutor}><Bot size={14} /> Ask AI Tutor</Button>
       <Button variant="danger" size="sm" onClick={onDelete}><Trash2 size={14} /> Delete gate</Button>
     </div>
   </Card>;
