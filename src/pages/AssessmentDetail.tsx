@@ -13,7 +13,7 @@ export function AssessmentDetail() {
   const { assessmentId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { active, startAssessment, setAnswer, setQuestionIndex, submitQuestion, submitAssessment, resetAssessment, getSummary, canAttempt } = useAssessments();
+  const { active, startAssessment, setAnswer, setQuestionIndex, submitQuestion, submitAssessment, resetAssessment, getSummary, canAttempt, results } = useAssessments();
   const { continueLesson } = useLearning();
   const assessment = assessmentId ? getAssessment(assessmentId) : undefined;
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -33,7 +33,7 @@ export function AssessmentDetail() {
   const module = getModule(assessment.moduleId);
 
   if (!isActive && summary.latest) {
-    return <AssessmentResults assessment={assessment} summary={summary} reviewOpen={reviewOpen} setReviewOpen={setReviewOpen} onRetake={() => { if (resetAssessment(assessment.id)) setReviewOpen(false); }} onContinue={() => navigate("/learn/module/" + continueLesson.moduleId + "/lesson/" + continueLesson.id)} onReviewLessons={() => navigate("/learn/module/" + assessment.moduleId)} />;
+    return <AssessmentResults assessment={assessment} summary={summary} results={results.filter((item) => item.assessmentId === assessment.id)} reviewOpen={reviewOpen} setReviewOpen={setReviewOpen} onRetake={() => { if (resetAssessment(assessment.id)) setReviewOpen(false); }} onContinue={() => navigate("/learn/module/" + continueLesson.moduleId + "/lesson/" + continueLesson.id)} onReviewLessons={() => navigate("/learn/module/" + assessment.moduleId)} />;
   }
 
   if (!isActive) return <div className="assessment-detail-page">
@@ -123,7 +123,7 @@ export function AssessmentDetail() {
   </div>;
 }
 
-function AssessmentResults({ assessment, summary, reviewOpen, setReviewOpen, onRetake, onContinue, onReviewLessons }: { assessment: Assessment; summary: AssessmentAttemptSummary; reviewOpen: boolean; setReviewOpen: (value: boolean) => void; onRetake: () => void; onContinue: () => void; onReviewLessons: () => void }) {
+function AssessmentResults({ assessment, summary, results, reviewOpen, setReviewOpen, onRetake, onContinue, onReviewLessons }: { assessment: Assessment; summary: AssessmentAttemptSummary; results: import("../types/assessment").AssessmentResult[]; reviewOpen: boolean; setReviewOpen: (value: boolean) => void; onRetake: () => void; onContinue: () => void; onReviewLessons: () => void }) {
   const navigate = useNavigate();
   const result = summary.latest;
   if (!result) return null;
@@ -135,7 +135,7 @@ function AssessmentResults({ assessment, summary, reviewOpen, setReviewOpen, onR
       <Card className="assessment-result-score"><span>Score</span><strong>{result.percentage}%</strong><Badge tone={result.passed ? "success" : "danger"}>{result.passed ? "Passed" : "Needs review"}</Badge><p>{result.correctCount} / {result.totalQuestions} correct · Attempt {result.attemptNumber}</p></Card>
       <Card className="assessment-result-summary"><div><span>Best score</span><strong>{summary.best?.percentage ?? result.percentage}%</strong></div><div><span>Attempts</span><strong>{summary.attemptCount}</strong></div><div><span>Passing score</span><strong>{assessment.passingScore}%</strong></div><div><span>Submitted</span><strong>{new Date(result.submittedAt).toLocaleDateString()}</strong></div></Card>
     </section>
-    <div className="assessment-result-actions"><Button onClick={result.passed ? onContinue : onReviewLessons}>{result.passed ? "Continue Learning" : "Review Lessons"} <ArrowRight size={15} /></Button>{canRetake(assessment, summary) && <Button variant="secondary" onClick={onRetake}><RotateCcw size={15} /> Retake assessment</Button>}<Button variant="ghost" onClick={() => setReviewOpen(!reviewOpen)}>{reviewOpen ? "Hide review" : "Review incorrect answers"}</Button></div>
+    <Card className="assessment-attempt-history"><div className="card-kicker">Attempt history</div><h2>Previous attempts</h2>{[...results].reverse().map((attempt) => <div className="assessment-attempt-row" key={attempt.attemptId}><span>Attempt {attempt.attemptNumber}</span><strong>{attempt.percentage}%</strong><Badge tone={attempt.passed ? "success" : "danger"}>{attempt.passed ? "Passed" : "Review"}</Badge><time>{new Date(attempt.submittedAt).toLocaleString()}</time></div>)}</Card>\n    <div className="assessment-result-actions"><Button onClick={result.passed ? onContinue : onReviewLessons}>{result.passed ? "Continue Learning" : "Review Lessons"} <ArrowRight size={15} /></Button>{canRetake(assessment, summary) && <Button variant="secondary" onClick={onRetake}><RotateCcw size={15} /> Retake assessment</Button>}<Button variant="ghost" onClick={() => setReviewOpen(!reviewOpen)}>{reviewOpen ? "Hide review" : "Review incorrect answers"}</Button></div>
     {reviewOpen && <Card className="assessment-review-card"><div className="card-kicker">Review</div><h2>Learn from each response</h2>{incorrect.map((answer) => {
       const question = assessment.questions.find((item) => item.id === answer.questionId);
       if (!question) return null;
