@@ -41,3 +41,40 @@ export interface DashboardStats {
   averageScore: number;
   streak: number;
 }
+
+export type LessonStatus = "not-started" | "in-progress" | "completed";
+export type Difficulty = "Beginner" | "Intermediate";
+
+export interface LearningSection {
+  heading: string;
+  body: string;
+}
+
+export interface LearningExample {
+  type: "state" | "hadamard" | "measurement" | "gate";
+  title: string;
+  description: string;
+}
+
+export interface Lesson {
+  id: string;
+  moduleId: string;
+  title: string;
+  description: string;
+  duration: string;
+  difficulty: Difficulty;
+  sections: LearningSection[];
+  example: LearningExample;
+  takeaways: string[];
+  circuit?: string[];
+}
+
+export interface LearningModule {
+  id: string;
+  number: number;
+  title: string;
+  description: string;
+  estimatedTime: string;
+  objectives: string[];
+  lessons: Lesson[];
+}
