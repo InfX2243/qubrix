@@ -36,11 +36,12 @@ a { color: inherit; text-decoration: none; }
 .brand-row { height: 40px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 8px; }
 .sidebar-controls { display: flex; align-items: center; gap: 4px; }
 .navigation-control { display: flex; align-items: center; }
-.desktop-nav-toggle { flex: 0 0 auto; }\n.sidebar-nav-toggle { margin: 0 2px 10px auto; }
+.desktop-nav-toggle { flex: 0 0 auto; }
+.sidebar-nav-toggle { margin: 0 2px 10px auto; }
 
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -.04em; }
 .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--primary); color: var(--white); font-size: 17px; box-shadow: 0 7px 16px rgba(138,43,226,.24); }
-.mobile-close, .mobile-menu { display: none; }
+.mobile-close, .mobile-menu { display: none !important; }
 .sidebar-nav { display: flex; flex: 1; flex-direction: column; gap: 5px; margin-top: 30px; }
 .nav-section-label { padding: 0 12px 8px; color: var(--slate); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; min-height: 19px; }
 .nav-item { min-height: 44px; display: flex; align-items: center; gap: 12px; padding: 0 12px; border-radius: 10px; color: var(--slate); font-weight: 600; font-size: 13px; transition: background .15s ease, color .15s ease; }
@@ -60,7 +61,8 @@ a { color: inherit; text-decoration: none; }
 .breadcrumbs strong { color: var(--navy); font-weight: 600; }
 .topbar-actions { gap: 10px; }
 .icon-button { width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 1px solid var(--border); border-radius: 10px; color: var(--slate); background: var(--white); }
-.icon-button:hover { color: var(--navy); border-color: #c7cede; }\n.mobile-close, .mobile-menu { display: none; }
+.icon-button:hover { color: var(--navy); border-color: #c7cede; }
+.mobile-close, .mobile-menu { display: none !important; }
 .profile-menu { gap: 9px; padding: 3px 8px 3px 3px; background: transparent; border: 0; color: var(--navy); text-align: left; }
 .avatar { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 11px; font-weight: 700; }
 .profile-copy { display: grid; gap: 1px; }
