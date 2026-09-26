@@ -1,10 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/shell";
 import { Dashboard } from "./pages/Dashboard";
+import { Learn } from "./pages/Learn";
+import { ModuleDetail } from "./pages/ModuleDetail";
+import { LessonDetail } from "./pages/LessonDetail";
 import { PreviewPage } from "./pages/PreviewPage";
+import { LearningProvider } from "./context/LearningContext";
 
 const previews = [
-  { path: "/learn", title: "Learn", description: "Move from quantum fundamentals to algorithms through structured, interactive lessons.", label: "Curriculum & interactive lessons", action: "Browse curriculum" },
   { path: "/circuit-designer", title: "Circuit Designer", description: "Compose quantum circuits visually with gates, qubits, and operation columns.", label: "Visual circuit construction", action: "Open example circuit" },
   { path: "/simulator", title: "Simulator", description: "Compare controlled mock execution across the quantum frameworks in the Qubrix MVP.", label: "Multi-framework simulation", action: "Run mock circuit" },
   { path: "/visualizer", title: "Visualizer", description: "Inspect circuit diagrams, statevector information, Bloch-sphere context, and measurement results.", label: "Quantum state visualization", action: "View sample result" },
@@ -15,12 +18,17 @@ const previews = [
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<AppShell />}>
-        <Route index element={<Dashboard />} />
-        {previews.map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />)}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+    <LearningProvider>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/learn/module/:moduleId" element={<ModuleDetail />} />
+          <Route path="/learn/module/:moduleId/lesson/:lessonId" element={<LessonDetail />} />
+          {previews.map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />)}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </LearningProvider>
   );
 }
