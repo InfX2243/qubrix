@@ -76,7 +76,7 @@ export function LessonDetail() {
 
         <aside className="lesson-sidebar">
           <Card className="lesson-context-card"><span className="card-kicker">You are learning</span><h3>{module.title}</h3><p>{module.description}</p><Link to={`/learn/module/${module.id}`}>View module</Link>{lesson.circuit && <Link className="btn btn-secondary btn-sm" to="/circuit-designer">Open Circuit Designer</Link>}</Card>
-          <Card className="lesson-tutor-card"><Bot size={19} /><span className="card-kicker">Need a hint?</span><h3>Ask about {lesson.title}</h3><p>The future tutor will use this module and lesson context when answering.</p><Button variant="secondary" size="sm" onClick={() => navigate("/tutor", { state: { tutorContext: { source: "lesson", moduleId: module.id, moduleTitle: module.title, lessonId: lesson.id, lessonTitle: lesson.title, topic: lesson.description, lessonContent: lesson, returnPath: `/learn/module/${module.id}/lesson/${lesson.id}`, userProgress: { overallProgress: 0, completedLessonIds } } } })}>Ask AI Tutor</Button></Card>
+          <Card className="lesson-tutor-card"><Bot size={19} /><span className="card-kicker">Need a hint?</span><h3>Ask about {lesson.title}</h3><p>The tutor will use this module and lesson context when answering.</p><Button variant="secondary" size="sm" onClick={() => navigate("/tutor", { state: { tutorContext: { source: "lesson", moduleId: module.id, moduleTitle: module.title, lessonId: lesson.id, lessonTitle: lesson.title, topic: lesson.description, lessonContent: lesson, returnPath: `/learn/module/${module.id}/lesson/${lesson.id}`, userProgress: { overallProgress: 0, completedLessonIds } } } })}>Ask AI Tutor</Button></Card>
         </aside>
       </div>
 
