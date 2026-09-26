@@ -140,7 +140,7 @@ export function generateCode(circuit: CircuitState, framework: CodeFramework): s
     return [
       "from qiskit import QuantumCircuit",
       "",
-      `qc = QuantumCircuit(${circuit.qubits})`,
+      `qc = QuantumCircuit(${circuit.qubits}${gates.some((gate) => gate.type === "MEASURE") ? `, ${circuit.qubits}` : ""})`,
       ...gates.map(qiskitGate).filter(Boolean),
       "",
       "# Mock Qubrix circuit representation",
@@ -157,7 +157,7 @@ export function generateCode(circuit: CircuitState, framework: CodeFramework): s
       "def circuit():",
       ...(gates.filter((gate) => gate.type !== "MEASURE").length ? gates.filter((gate) => gate.type !== "MEASURE").map((gate) => `    ${pennyLaneGate(gate)}`) : ["    pass"]),
       "",
-      "result = circuit()",
+      gates.some((gate) => gate.type === "MEASURE") ? "result = circuit()" : "# No measurement operation in this mock circuit",
     ].join("\n");
   }
   return [
