@@ -1,6 +1,6 @@
 import { CheckCircle2, Clock3, LockKeyhole, Play, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Badge, Button, Card, ProgressBar, SectionHeader } from "./ui";
+import { Badge, Card, ProgressBar, SectionHeader } from "./ui";
 import type { LearningModule, Lesson } from "../types";
 import { getModule } from "../mockData";
 import { useLearning } from "../context/LearningContext";
