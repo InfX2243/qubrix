@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight, Bot, CheckCircle2, Clock3 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { InteractiveExample } from "../components/InteractiveExample";
 import { MissingContent } from "../components/learning";
 import { Badge, Breadcrumb, Button, Card, Modal, PageHeader, ProgressBar, Toast } from "../components/ui";
@@ -9,7 +9,6 @@ import { useLearning } from "../context/LearningContext";
 
 export function LessonDetail() {
   const { moduleId, lessonId } = useParams();
-  const navigate = useNavigate();
   const { isCompleted, completeLesson, completedLessonIds } = useLearning();
   const [toast, setToast] = useState<string | null>(null);
   const [tutorOpen, setTutorOpen] = useState(false);
