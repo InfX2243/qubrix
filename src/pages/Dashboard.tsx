@@ -1,13 +1,14 @@
 import { ArrowRight, BookOpen, BrainCircuit, CheckCircle2, CirclePlay, Clock3, Flame, Gauge, GitBranch, Layers3, Sparkles, Target, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { activities, currentUser, dashboardStats } from "../mockData";
+import { activities, currentUser, dashboardStats, getModule } from "../mockData";
 import { useLearning } from "../context/LearningContext";
 import { Badge, Button, Card, PageHeader, ProgressBar, SectionHeader, StatCard } from "../components/ui";
 
 export function Dashboard() {
   const navigate = useNavigate();
   const { overallProgress, continueLesson, moduleProgress } = useLearning();
-  const continueModule = continueLesson.moduleId ? moduleProgress.find((item) => item.name === (continueLesson.moduleId === "fundamentals" ? "Quantum Computing Fundamentals" : continueLesson.moduleId === "gates" ? "Quantum Gates" : continueLesson.moduleId === "concepts" ? "Quantum Concepts" : "Quantum Algorithms")) : undefined;
+  const continueModuleDefinition = getModule(continueLesson.moduleId);
+  const continueModule = continueModuleDefinition ? moduleProgress.find((item) => item.name === continueModuleDefinition.title) : undefined;
   const modulePercent = continueModule ? Math.round((continueModule.completed / continueModule.total) * 100) : 0;
 
   return (
