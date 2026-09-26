@@ -104,7 +104,8 @@ function CircuitCanvas({ circuit, selectedId, selectedGateType, pendingCnotContr
                 const cnot = cnotAt(circuit, column);
                 const isCnotTarget = cnot?.targetQubit === qubit;
                 const isPending = pendingCnotControl?.column === column && pendingCnotControl.qubit === qubit;
-                const cnotMin = cnot ? Math.min(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;\n                const cnotMax = cnot ? Math.max(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;
+                const cnotMin = cnot ? Math.min(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;
+                const cnotMax = cnot ? Math.max(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;
                 const isCnotBetween = cnot ? qubit > cnotMin && qubit < cnotMax : false;
                 return (
                   <div className={`circuit-cell ${isPending ? "is-pending" : ""} ${selectedGateType ? "is-placeable" : ""}`} key={column}>
@@ -321,14 +322,11 @@ export function CircuitDesigner() {
     setCircuit(next);
     setSelectedGateId(null);
     clearPlacement();
-    setActiveSaved(preset.name);
     notify(`${preset.name} loaded.`, "success");
   };
 
   const saveCircuit = () => {
-    const label = activeSaved ?? `Circuit ${savedCircuits.length + 1}`;
-    setSavedCircuits((items) => items.includes(label) ? items : [label, ...items].slice(0, 4));
-    notify(`“${label}” saved locally in this mock workspace.`, "success");
+    notify("Circuit saved locally for this mock session. No backend persistence is used.", "success");
   };
 
   const runCircuit = () => {
