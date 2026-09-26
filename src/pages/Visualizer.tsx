@@ -26,7 +26,7 @@ function Summary({ result }: { result: SimulationResult }) {
 export function Visualizer() {
   const navigate = useNavigate();
   const { history, selectedResult, latestResult, selectResult } = useSimulation();
-  const result = selectedResult ?? latestResult;
+  const result = selectedResult ?? latestResult;\n  const explainVisualization = () => { if (result?.status === "SUCCESS") navigate("/tutor", { state: { tutorContext: { source: "visualization", visualization: tab === "overview" ? "histogram" : tab as "histogram" | "statevector" | "bloch" | "circuit", circuitSnapshot: result.circuitSnapshot, simulationResult: result, returnPath: "/visualizer" } } }); };
   const [tab, setTab] = useState("overview");
   const hasResult = result?.status === "SUCCESS";
   const resultNotice = useMemo(() => result?.status === "ERROR" ? result.error ?? "This simulation did not produce visualization data." : null, [result]);
@@ -43,7 +43,7 @@ export function Visualizer() {
   const bloch = <BlochSphere result={result} />;
   const circuit = <CircuitResultView result={result} />;
   return <div>
-    <PageHeader eyebrow="Quantum state exploration" title="Quantum State & Result Visualizer" description="Explore the state and measurement results produced by your quantum circuit." action={<Button variant="secondary" onClick={() => navigate("/simulator")}><ExternalLink size={15} /> Back to Simulator</Button>} />
+    <PageHeader eyebrow="Quantum state exploration" title="Quantum State & Result Visualizer" description="Explore the state and measurement results produced by your quantum circuit." action={<div className="sim-circuit-actions"><Button variant="secondary" onClick={explainVisualization}>Explain This Visualization</Button><Button variant="ghost" onClick={() => navigate("/simulator")}><ExternalLink size={15} /> Back to Simulator</Button></div>} />
     <div className="visualizer-notice"><FlaskConical size={16} /><span><strong>Mock Simulation Result:</strong> this visualization consumes the selected SimulationResult only. No quantum API, cloud service, or hardware is contacted.</span></div>
     <ResultHistory results={history} selected={result} onSelect={selectResult} />
     <Summary result={result} />
