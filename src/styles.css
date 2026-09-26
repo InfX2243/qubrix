@@ -35,7 +35,9 @@ a { color: inherit; text-decoration: none; }
 .sidebar-collapsed { width: var(--sidebar-collapsed); }
 .brand-row { height: 40px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 8px; }
 .sidebar-controls { display: flex; align-items: center; gap: 4px; }
-.sidebar-collapse-control { width: 34px; height: 34px; border: 0; background: transparent; }
+.navigation-control { display: flex; align-items: center; }
+.desktop-nav-toggle { flex: 0 0 auto; }
+
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -.04em; }
 .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--primary); color: var(--white); font-size: 17px; box-shadow: 0 7px 16px rgba(138,43,226,.24); }
 .mobile-close, .mobile-menu { display: none; }
@@ -53,6 +55,7 @@ a { color: inherit; text-decoration: none; }
 .sidebar-collapsed + .app-main { width: calc(100% - var(--sidebar-collapsed)); margin-left: var(--sidebar-collapsed); }
 .topbar { height: var(--topbar-height); position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; background: rgba(238,241,255,.92); border-bottom: 1px solid rgba(221,226,240,.8); backdrop-filter: blur(12px); }
 .topbar-left, .topbar-actions, .profile-menu, .breadcrumbs { display: flex; align-items: center; }
+.topbar-left { gap: 10px; }
 .breadcrumbs { gap: 9px; color: var(--slate); font-size: 12px; }
 .breadcrumbs strong { color: var(--navy); font-weight: 600; }
 .topbar-actions { gap: 10px; }
@@ -253,7 +256,7 @@ a { color: inherit; text-decoration: none; }
   .sidebar-mobile-open { transform: translateX(0); }
   .sidebar-collapsed { width: min(290px, 84vw); }
   .sidebar-collapsed .nav-item span:not(.nav-icon), .sidebar-collapsed .brand span:not(.brand-mark), .sidebar-collapsed .nav-section-label, .sidebar-collapsed .sidebar-tip { display: flex; }
-  .sidebar-collapse-control { display: none; }
+  .desktop-nav-toggle { display: none; }
   .mobile-close, .mobile-menu { display: grid; }
   .mobile-backdrop { position: fixed; inset: 0; z-index: 25; border: 0; background: rgba(11,16,32,.35); }
   .app-main, .sidebar-collapsed + .app-main { width: 100%; margin-left: 0; }
@@ -671,9 +674,20 @@ a { color: inherit; text-decoration: none; }
 @media (max-width:680px){.tutor-chat-panel{min-height:calc(100vh - 190px);grid-template-rows:auto auto minmax(360px,1fr) auto}.tutor-chat-toolbar{align-items:flex-start;flex-direction:column}.tutor-toolbar-actions{width:100%;justify-content:flex-start}.tutor-level{flex:1}.tutor-level select{width:100%}.tutor-sidebar{grid-template-columns:1fr}.tutor-scope-card{grid-column:auto}.tutor-notice{align-items:flex-start}.tutor-messages{padding:14px 10px 20px}.tutor-message,.tutor-message-user{max-width:100%}.tutor-composer{position:sticky;bottom:0}.tutor-composer .btn{padding-inline:12px}.tutor-composer .btn span{display:none}.tutor-related{align-items:flex-start;flex-direction:column}.tutor-related .btn{width:100%}}
 
 
-/* Phase 7 — assessment progress */
-.learning-assessment-strip{display:grid;gap:12px;margin-top:24px}.learning-assessment-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.learning-assessment-grid .card{display:grid;gap:10px}.learning-assessment-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.learning-assessment-top>span{font-weight:700;font-size:13px}.learning-assessment-grid p{margin:0;color:var(--slate);font-size:13px;line-height:1.5}@media(max-width:900px){.learning-assessment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.learning-assessment-grid{grid-template-columns:1fr}}
-
+/* Learn — assessment progress cards */
+.learning-assessment-strip { margin-top: 26px; }
+.learning-assessment-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.learning-assessment-card { min-width: 0; padding: 17px; display: grid; gap: 13px; align-content: start; }
+.learning-assessment-card .progress-wrap { margin-top: 1px; }
+.learning-assessment-card .progress-label { margin-bottom: 6px; font-size: 9px; }
+.learning-assessment-card .progress-track { height: 7px; }
+.learning-assessment-card .badge { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.learning-assessment-top { min-height: 25px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.learning-assessment-score { flex: 0 0 auto; color: var(--navy); font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.learning-assessment-score.is-muted { color: var(--slate); font-size: 10px; font-weight: 700; }
+.learning-assessment-card p { min-height: 31px; margin: 0; color: var(--slate); font-size: 10px; line-height: 1.55; }
+@media(max-width:900px){.learning-assessment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.learning-assessment-grid{grid-template-columns:1fr}.learning-assessment-card p{min-height:0}}
 
 .module-assessment-section{margin-top:22px;padding:18px;border:1px solid var(--border);border-radius:14px;background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:18px}.module-assessment-copy h2{margin:6px 0}.module-assessment-copy p{margin:0;color:var(--slate);max-width:700px}.module-assessment-status{display:grid;gap:4px;justify-items:end;min-width:170px}.module-assessment-status strong{font-size:24px}.module-assessment-status span{font-size:12px;color:var(--slate);text-align:right}.lesson-knowledge-check{margin:20px 0;padding:17px;border:1px solid var(--border);border-radius:13px;background:var(--background);display:flex;align-items:center;justify-content:space-between;gap:18px}.lesson-knowledge-check h2{margin:5px 0}.lesson-knowledge-check p{margin:0;color:var(--slate);line-height:1.55}@media(max-width:700px){.module-assessment-section,.lesson-knowledge-check{align-items:stretch;flex-direction:column}.module-assessment-status{justify-items:start}.module-assessment-status span{text-align:left}}
 
