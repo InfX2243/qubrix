@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronDown, CircleDot, Clipboard, Code2, Copy, ExternalLink, GitBranch, Info, Layers3, Minus, Play, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
+import { ChevronDown, CircleDot, Code2, Copy, ExternalLink, Info, Layers3, Minus, Play, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Button, Card, PageHeader, ProgressBar, Select, Toast, Tooltip } from "../components/ui";
+import { Badge, Button, Card, PageHeader, Select, Toast, Tooltip } from "../components/ui";
 import {
   CodeFramework, CircuitGate, CircuitState, Framework, MAX_COLUMNS, MAX_QUBITS,
   codeFrameworks, emptyCircuit, frameworks, frameworkShortLabel, gateDefinitions, getGateDefinition, generateCode, presetCircuits,
