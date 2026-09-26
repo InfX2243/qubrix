@@ -130,6 +130,8 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
     const previousAttempts = results.filter((item) => item.assessmentId === assessmentId);
     const result: AssessmentResult = {
       assessmentId,
+      moduleId: assessment.moduleId,
+      lessonId: assessment.lessonId,
       attemptId: "attempt-" + Date.now(),
       answers,
       correctCount,
