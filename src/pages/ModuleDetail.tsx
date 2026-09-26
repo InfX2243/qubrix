@@ -8,7 +8,7 @@ import { useLearning } from "../context/LearningContext";
 export function ModuleDetail() {
   const { moduleId } = useParams();
   const navigate = useNavigate();
-  const { moduleProgress } = useLearning();
+  const { moduleProgress, isCompleted } = useLearning();
   const module = moduleId ? getModule(moduleId) : undefined;
 
   if (!module) return <MissingContent title="Module not found" description="That module does not exist in the current Qubrix curriculum." />;
@@ -16,7 +16,7 @@ export function ModuleDetail() {
   const progress = moduleProgress.find((item) => item.name === module.title);
   const completed = progress?.completed ?? 0;
   const percent = progress ? Math.round((completed / progress.total) * 100) : 0;
-  const firstIncomplete = module.lessons.find((lesson) => !useLearning().isCompleted(lesson.id)) ?? module.lessons[0];
+  const firstIncomplete = module.lessons.find((lesson) => !isCompleted(lesson.id)) ?? module.lessons[0];
 
   return (
     <div>
