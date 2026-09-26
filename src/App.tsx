@@ -11,6 +11,9 @@ import { SimulationProvider } from "./context/SimulationContext";
 import { Simulator } from "./pages/Simulator";
 import { Visualizer } from "./pages/Visualizer";
 import { Tutor } from "./pages/Tutor";
+import { Assessments } from "./pages/Assessments";
+import { AssessmentDetail } from "./pages/AssessmentDetail";
+import { AssessmentProvider } from "./context/AssessmentContext";
 
 const previews = [
   { path: "/circuit-designer", title: "Circuit Designer", description: "Compose quantum circuits visually with gates, qubits, and operation columns.", label: "Visual circuit construction", action: "Open example circuit" },
@@ -23,7 +26,7 @@ const previews = [
 
 export default function App() {
   return (
-    <LearningProvider><SimulationProvider>
+    <AssessmentProvider><LearningProvider><SimulationProvider>
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<Dashboard />} />
@@ -34,10 +37,12 @@ export default function App() {
           <Route path="/simulator" element={<Simulator />} />
           <Route path="/visualizer" element={<Visualizer />} />
           <Route path="/tutor" element={<Tutor />} />
-          {previews.filter((page) => !["/circuit-designer", "/simulator", "/visualizer"].includes(page.path)).map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />)}
+          <Route path="/assessments" element={<Assessments />} />
+          <Route path="/assessments/:assessmentId" element={<AssessmentDetail />} />
+          {previews.filter((page) => !["/circuit-designer", "/simulator", "/visualizer", "/assessments"].includes(page.path)).map((page) => <Route key={page.path} path={page.path} element={<PreviewPage {...page} />} />}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
-    </SimulationProvider></LearningProvider>
+    </SimulationProvider></LearningProvider></AssessmentProvider>
   );
 }
