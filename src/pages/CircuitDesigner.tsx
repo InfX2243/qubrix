@@ -188,8 +188,8 @@ export function CircuitDesigner() {
   const [framework, setFramework] = useState<Framework>("Qiskit Aer");
   const [codeFramework, setCodeFramework] = useState<CodeFramework>("Qiskit");
   const [running, setRunning] = useState(false);
-  const [shots] = useState(1000);
-  const { setCircuit: setSimulationCircuit, setFramework: setSimulationFramework, execute: executeSimulation } = useSimulation();
+
+  const { shots, setShots, setCircuit: setSimulationCircuit, setFramework: setSimulationFramework, execute: executeSimulation } = useSimulation();
   const [runMessage, setRunMessage] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; tone?: "neutral" | "success" | "error" } | null>(null);
   
@@ -365,7 +365,7 @@ export function CircuitDesigner() {
 
       <div className="circuit-toolbar">
         <div className="toolbar-group"><Button variant="secondary" size="sm" onClick={addQubit} disabled={circuit.qubits >= MAX_QUBITS}><Plus size={14} /> Add qubit</Button><Button variant="secondary" size="sm" onClick={removeQubit} disabled={circuit.qubits <= 1}><Minus size={14} /> Remove qubit</Button><Button variant="secondary" size="sm" onClick={clearCircuit}><Trash2 size={14} /> Clear</Button><Button variant="secondary" size="sm" onClick={resetCircuit}><RotateCcw size={14} /> Reset</Button></div>
-        <div className="toolbar-group toolbar-right"><Select aria-label="Execution framework" value={framework} onChange={(event) => setFramework(event.target.value as Framework)}>{frameworks.map((item) => <option key={item}>{item}</option>)}</Select><Button variant="secondary" size="sm" onClick={saveCircuit}><Save size={14} /> Save Circuit</Button></div>
+        <div className="toolbar-group toolbar-right"><Select aria-label="Execution framework" value={framework} onChange={(event) => setFramework(event.target.value as Framework)}>{frameworks.map((item) => <option key={item}>{item}</option>)}</Select><Select aria-label="Number of shots" value={shots} onChange={(event) => setShots(Number(event.target.value))}>{[100, 500, 1000, 5000, 10000].map((value) => <option key={value} value={value}>{value.toLocaleString()} shots</option>)}</Select><Button variant="secondary" size="sm" onClick={saveCircuit}><Save size={14} /> Save Circuit</Button></div>
       </div>
 
       <CircuitInfo circuit={circuit} framework={framework} />
