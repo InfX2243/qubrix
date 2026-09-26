@@ -261,8 +261,7 @@ export function getTutorResponse(message: string, context: TutorContext, level: 
       ], context, lesson.id, ["Quiz me on this lesson", "Explain the hardest part simply", "How does this relate to a circuit?"]);
     }
     if (asksExample) {
-      const example = lesson.circuit?.length ? lesson.circuit.join("
-") : lesson.example.description;
+      const example = lesson.circuit?.length ? lesson.circuit.join("\n") : lesson.example.description;
       return response("example", `${levelPrefix(level)}here is a concrete way to connect the lesson to practice.`, [
         { heading: lesson.example.title, paragraphs: [lesson.example.description], code: lesson.circuit?.length ? example : undefined },
       ], context, lesson.id, ["Explain this example", "Why does this work?", "What should I try next?"]);
