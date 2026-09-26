@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { BarChart3, CircleDot, GitBranch, Info, MousePointer2 } from "lucide-react";
+import { CircleDot, Info } from "lucide-react";
 import { Badge, Card, Tabs } from "./ui";
 import type { CircuitGate, CircuitState } from "../data/circuitData";
 import { presetCircuits } from "../data/circuitData";
