@@ -3,9 +3,9 @@ import { ChevronDown, CircleDot, Code2, Copy, ExternalLink, Info, Layers3, Minus
 import { useNavigate } from "react-router-dom";
 import { Badge, Button, Card, PageHeader, Select, Toast, Tooltip } from "../components/ui";
 import {
-  CodeFramework, CircuitGate, CircuitState, Framework, MAX_COLUMNS, MAX_QUBITS,
-  codeFrameworks, emptyCircuit, frameworks, gateDefinitions, getGateDefinition, generateCode, presetCircuits,
+  MAX_COLUMNS, MAX_QUBITS, codeFrameworks, emptyCircuit, frameworks, gateDefinitions, getGateDefinition, generateCode, presetCircuits,
 } from "../data/circuitData";
+import type { CodeFramework, CircuitGate, CircuitState, Framework } from "../data/circuitData";
 
 const newId = () => `gate-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
