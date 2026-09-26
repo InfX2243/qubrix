@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowLeft, Clock3, ExternalLink, FlaskConical } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import "./Visualizer.css";
 import { Badge, Button, Card, EmptyState, ErrorState, PageHeader } from "../components/ui";
 import { useSimulation } from "../context/SimulationContext";
 import { circuitName, CircuitResultView, BlochSphere, Interpretation, MeasurementHistogram, StatevectorViewer, VisualizationTabs } from "../components/visualization";
@@ -32,7 +33,7 @@ export function Visualizer() {
   const hasResult = result?.status === "SUCCESS";
   const resultNotice = useMemo(() => result?.status === "ERROR" ? result.error ?? "This simulation did not produce visualization data." : null, [result]);
 
-  if (!result || !hasResult) return <div>
+  if (!result || !hasResult) return <div className="visualizer-page">
     <PageHeader eyebrow="Quantum state exploration" title="Quantum State & Result Visualizer" description="Explore the state and measurement results produced by your quantum circuit." />
     {resultNotice && <ErrorState title="Simulation result unavailable" description={resultNotice} />}
     <EmptyState title="No simulation results yet" description="Run a circuit in the Simulator, then return here to inspect measurements, statevector data, the Bloch sphere, and the executed circuit." action={<Button onClick={() => navigate("/circuit-designer")}><ArrowLeft size={15} /> Open Circuit Designer</Button>} />
@@ -43,7 +44,7 @@ export function Visualizer() {
   const statevector = <StatevectorViewer result={result} />;
   const bloch = <BlochSphere result={result} />;
   const circuit = <CircuitResultView result={result} />;
-  return <div>
+  return <div className="visualizer-page">
     <PageHeader eyebrow="Quantum state exploration" title="Quantum State & Result Visualizer" description="Explore the state and measurement results produced by your quantum circuit." action={<div className="sim-circuit-actions"><Button variant="secondary" onClick={explainVisualization}>Explain This Visualization</Button><Button variant="ghost" onClick={() => navigate("/simulator")}><ExternalLink size={15} /> Back to Simulator</Button></div>} />
     <div className="visualizer-notice"><FlaskConical size={16} /><span><strong>Mock Simulation Result:</strong> this visualization consumes the selected SimulationResult only. No quantum API, cloud service, or hardware is contacted.</span></div>
     <ResultHistory results={history} selected={result} onSelect={selectResult} />
