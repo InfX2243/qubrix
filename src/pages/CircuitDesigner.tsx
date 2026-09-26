@@ -202,6 +202,8 @@ export function CircuitDesigner() {
 
   useEffect(() => { setSimulationCircuit(circuit); setSimulationFramework(framework); }, [circuit, framework, setSimulationCircuit, setSimulationFramework]);
 
+  useEffect(() => { setCodeFramework(framework === "Qiskit Aer" ? "Qiskit" : framework === "PennyLane" ? "PennyLane" : framework === "Cirq" ? "Cirq" : "qBraid"); }, [framework]);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
