@@ -90,7 +90,7 @@ export function Dashboard() {
           <div className="quick-action-grid">
             <button className="quick-action" onClick={() => navigate("/circuit-designer")}><div className="quick-icon purple"><Layers3 size={19} /></div><span><strong>Circuit Designer</strong><small>Build visually</small></span><ArrowRight size={15} /></button>
             <button className="quick-action" onClick={() => navigate("/simulator")}><div className="quick-icon cyan"><CirclePlay size={19} /></div><span><strong>Run simulation</strong><small>Try a framework</small></span><ArrowRight size={15} /></button>
-            <button className="quick-action" onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}><div className="quick-icon navy"><BrainCircuit size={19} /></div><span><strong>Ask AI Tutor</strong><small>Open lesson tutor</small></span><ArrowRight size={15} /></button>
+            <button className="quick-action" onClick={() => navigate("/tutor", { state: { tutorContext: { source: "lesson", moduleId: continueLesson.moduleId, moduleTitle: continueModule?.name, lessonId: continueLesson.id, lessonTitle: continueLesson.title, topic: continueLesson.description, lessonContent: continueLesson, returnPath: `/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}` } } })}><div className="quick-icon navy"><BrainCircuit size={19} /></div><span><strong>Ask AI Tutor</strong><small>Open lesson tutor</small></span><ArrowRight size={15} /></button>
           </div>
 
           <SectionHeader title="Assessment summary" action={<button className="text-button" onClick={() => navigate("/assessments")}>See all <ArrowRight size={14} /></button>} />
