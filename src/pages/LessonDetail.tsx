@@ -1,23 +1,23 @@
 import { ArrowLeft, ArrowRight, Bot, CheckCircle2, Clock3 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { InteractiveExample } from "../components/InteractiveExample";
 import { MissingContent } from "../components/learning";
-import { Badge, Breadcrumb, Button, Card, Modal, PageHeader, ProgressBar, Toast } from "../components/ui";
+import { Badge, Breadcrumb, Button, Card, PageHeader, ProgressBar, Toast } from "../components/ui";
 import { getLesson, getModule, getLessonIndex } from "../mockData";
 import { useLearning } from "../context/LearningContext";
 
 export function LessonDetail() {
   const { moduleId, lessonId } = useParams();
+  const navigate = useNavigate();
   const { isCompleted, completeLesson, completedLessonIds } = useLearning();
   const [toast, setToast] = useState<string | null>(null);
-  const [tutorOpen, setTutorOpen] = useState(false);
+
   const module = moduleId ? getModule(moduleId) : undefined;
   const lesson = lessonId ? getLesson(lessonId) : undefined;
 
   useEffect(() => {
     setToast(null);
-    setTutorOpen(false);
   }, [lessonId]);
 
   if (!module || !lesson || lesson.moduleId !== module.id) {
@@ -39,7 +39,7 @@ export function LessonDetail() {
   return (
     <div>
       <Breadcrumb items={[{ label: "Learn", href: "/learn" }, { label: module.title, href: `/learn/module/${module.id}` }, { label: lesson.title }]} />
-      <PageHeader eyebrow={`Lesson ${index + 1} of ${module.lessons.length}`} title={lesson.title} description={lesson.description} action={<Button variant="secondary" onClick={() => setTutorOpen(true)}><Bot size={16} /> Ask AI Tutor</Button>} />
+      <PageHeader eyebrow={`Lesson ${index + 1} of ${module.lessons.length}`} title={lesson.title} description={lesson.description} action={<Button variant="secondary" onClick={() => navigate("/tutor", { state: { tutorContext: { source: "lesson", moduleId: module.id, moduleTitle: module.title, lessonId: lesson.id, lessonTitle: lesson.title, topic: lesson.description, lessonContent: lesson, returnPath: `/learn/module/${module.id}/lesson/${lesson.id}`, userProgress: { overallProgress: 0, completedLessonIds } } } })}><Bot size={16} /> Ask AI Tutor</Button>} />
 
       <div className="lesson-progress-strip">
         <div><span>Module progress</span><strong>{completeCount} / {module.lessons.length} complete</strong></div>
@@ -76,13 +76,9 @@ export function LessonDetail() {
 
         <aside className="lesson-sidebar">
           <Card className="lesson-context-card"><span className="card-kicker">You are learning</span><h3>{module.title}</h3><p>{module.description}</p><Link to={`/learn/module/${module.id}`}>View module</Link>{lesson.circuit && <Link className="btn btn-secondary btn-sm" to="/circuit-designer">Open Circuit Designer</Link>}</Card>
-          <Card className="lesson-tutor-card"><Bot size={19} /><span className="card-kicker">Need a hint?</span><h3>Ask about {lesson.title}</h3><p>The future tutor will use this module and lesson context when answering.</p><Button variant="secondary" size="sm" onClick={() => setTutorOpen(true)}>Ask AI Tutor</Button></Card>
+          <Card className="lesson-tutor-card"><Bot size={19} /><span className="card-kicker">Need a hint?</span><h3>Ask about {lesson.title}</h3><p>The future tutor will use this module and lesson context when answering.</p><Button variant="secondary" size="sm" onClick={() => navigate("/tutor", { state: { tutorContext: { source: "lesson", moduleId: module.id, moduleTitle: module.title, lessonId: lesson.id, lessonTitle: lesson.title, topic: lesson.description, lessonContent: lesson, returnPath: `/learn/module/${module.id}/lesson/${lesson.id}`, userProgress: { overallProgress: 0, completedLessonIds } } } })}>Ask AI Tutor</Button></Card>
         </aside>
       </div>
-
-      <Modal open={tutorOpen} title={`Ask AI about ${lesson.title}`} onClose={() => setTutorOpen(false)} actions={<Button onClick={() => setTutorOpen(false)}>Close</Button>}>
-        <div className="tutor-preview"><div className="tutor-preview-icon"><Bot size={20} /></div><Badge tone="cyan">Mock tutor entry point</Badge><h3>{lesson.title}</h3><p>Context prepared for the future AI Tutor:</p><ul><li><strong>Module:</strong> {module.title}</li><li><strong>Lesson:</strong> {lesson.title}</li><li><strong>Topic:</strong> {lesson.description}</li></ul><div className="tutor-prompt">“Explain {lesson.title} in simpler terms and give me one example I can try.”</div><span className="muted-small">AI responses are not implemented in this phase.</span></div>
-      </Modal>
 
       {toast && <Toast message={toast} tone={completed ? "neutral" : "success"} />}
     </div>
