@@ -64,6 +64,7 @@ function TutorMessage({ message }: { message: ChatMessage }) {
         {section.tryThis && <div className="tutor-try"><Sparkles size={14} /><span>{section.tryThis}</span></div>}
       </div>)}
       {message.response?.contextUsed.length ? <div className="tutor-context-used"><Info size={12} /> {message.response.contextUsed.join(" · ")}</div> : null}
+      {message.response?.suggestedFollowUps?.length ? <div className="tutor-followups" aria-label="Suggested follow-up questions">{message.response.suggestedFollowUps.slice(0, 3).map((question) => <button type="button" key={question} onClick={() => window.dispatchEvent(new CustomEvent("qubrix-tutor-followup", { detail: question }))}>{question}</button>)}</div> : null}
       {message.response?.relatedLessonId && <div className="tutor-related">
         <div><span className="card-kicker">Related lesson</span><strong>{message.response.relatedLessonTitle}</strong></div>
         <Link className="btn btn-secondary btn-sm" to={lessonPath(message.response.relatedLessonId)}><ExternalLink size={13} /> Open Lesson</Link>
