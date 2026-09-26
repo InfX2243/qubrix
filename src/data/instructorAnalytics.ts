@@ -111,7 +111,7 @@ function overallProgress(learner: InstructorLearner) {
 }
 
 function latestAttempts(learner: InstructorLearner) {
-  return assessments.map((assessment) => learner.assessmentAttempts.filter((attempt) => attempt.assessmentId === assessment.id).at(-1)).filter(Boolean) as InstructorAssessmentAttempt[];
+  return assessments.map((assessment) => learner.assessmentAttempts.filter((attempt) => attempt.assessmentId === assessment.id).slice(-1)[0]).filter(Boolean) as InstructorAssessmentAttempt[];
 }
 
 function assessmentAverage(learner: InstructorLearner) {
@@ -163,7 +163,7 @@ export function getRecentActivity() {
 }
 
 export function getLearnerSummary(learner: InstructorLearner) {
-  return { ...learner, overallProgress: overallProgress(learner), assessmentAverage: assessmentAverage(learner), latestAssessment: latestAttempts(learner).at(-1) ?? null, currentModule: learningModules.find((module) => module.id === learner.currentModuleId)?.title ?? "Unknown module" };
+  return { ...learner, overallProgress: overallProgress(learner), assessmentAverage: assessmentAverage(learner), latestAssessment: latestAttempts(learner).slice(-1)[0] ?? null, currentModule: learningModules.find((module) => module.id === learner.currentModuleId)?.title ?? "Unknown module" };
 }
 
 export function getLearnerModuleProgress(learner: InstructorLearner) {
