@@ -103,7 +103,7 @@ function CircuitCanvas({ circuit, selectedId, selectedGateType, pendingCnotContr
                 const gate = getGate(column, qubit);
                 const cnot = cnotAt(circuit, column);
                 const isCnotTarget = cnot?.targetQubit === qubit;
-                const isPending = pendingCnotControl?.column === column && pendingCnotControl.qubit === qubit;
+                const isPending = pendingCnotControl?.column === column && pendingCnotControl.qubit === qubit;\n                const cnotMin = cnot ? Math.min(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;\n                const cnotMax = cnot ? Math.max(cnot.qubit, cnot.targetQubit ?? cnot.qubit) : -1;\n                const isCnotBetween = cnot ? qubit > cnotMin && qubit < cnotMax : false;
                 return (
                   <div className={`circuit-cell ${isPending ? "is-pending" : ""} ${selectedGateType ? "is-placeable" : ""}`} key={column}>
                     {cnot && cnot.qubit === qubit ? (
@@ -115,7 +115,7 @@ function CircuitCanvas({ circuit, selectedId, selectedGateType, pendingCnotContr
                     ) : (
                       <button type="button" className="circuit-slot" aria-label={`Empty circuit slot q${qubit}, column ${column}`} onClick={() => onSlotClick(column, qubit)}>{pendingCnotControl?.column === column && <span className="slot-dot" aria-hidden="true" />}</button>
                     )}
-                    {cnot && cnot.column === column && <span className="cnot-wire" aria-hidden="true" style={{ top: cnot.qubit < (cnot.targetQubit ?? 0) ? "50%" : "auto", bottom: cnot.qubit > (cnot.targetQubit ?? 0) ? "50%" : "auto" }} />}
+                    {cnot && cnot.column === column && (qubit === cnot.qubit || qubit === cnot.targetQubit || isCnotBetween) && <span className="cnot-wire" aria-hidden="true" style={{ top: isCnotBetween ? "0" : qubit === cnot.qubit ? "50%" : "0", bottom: isCnotBetween ? "0" : qubit === cnot.targetQubit ? "50%" : "0" }} />}
                   </div>
                 );
               })}
