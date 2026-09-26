@@ -1,6 +1,6 @@
 import { ArrowRight, BookOpen, BrainCircuit, CheckCircle2, CirclePlay, Clock3, Flame, Gauge, GitBranch, Layers3, Sparkles, Target, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { activities, currentUser, dashboardStats, getAllModuleProgress } from "../mockData";
+import { activities, currentUser, dashboardStats } from "../mockData";
 import { useLearning } from "../context/LearningContext";
 import { Badge, Button, Card, PageHeader, ProgressBar, SectionHeader, StatCard } from "../components/ui";
 
