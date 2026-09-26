@@ -3,12 +3,15 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { LearningObjectiveList, LessonList, MissingContent, ModuleProgressSummary } from "../components/learning";
 import { Badge, Breadcrumb, Button, PageHeader } from "../components/ui";
 import { getModule } from "../mockData";
+import { getAssessmentsForModule } from "../data/assessments";
+import { useAssessments } from "../context/AssessmentContext";
 import { useLearning } from "../context/LearningContext";
 
 export function ModuleDetail() {
   const { moduleId } = useParams();
   const navigate = useNavigate();
   const { moduleProgress, isCompleted } = useLearning();
+  const { getSummary } = useAssessments();
   const module = moduleId ? getModule(moduleId) : undefined;
 
   if (!module) return <MissingContent title="Module not found" description="That module does not exist in the current Qubrix curriculum." />;
@@ -51,7 +54,7 @@ export function ModuleDetail() {
       </section>
 
       <LessonList module={module} />
-
+\n      {getAssessmentsForModule(module.id).map((assessment) => { const summary = getSummary(assessment.id); return <section className="module-assessment-section" key={assessment.id}><div className="module-assessment-copy"><Badge tone="purple">Module assessment</Badge><h2>{assessment.title}</h2><p>{assessment.description}</p></div><div className="module-assessment-status"><strong>{summary.latest ? `${summary.latest.percentage}%` : "Not started"}</strong><span>{summary.latest ? (summary.latest.passed ? "Passed" : "Needs review") : `${assessment.questions.length} questions · Pass ${assessment.passingScore}%`}</span><Button variant={summary.latest?.passed ? "secondary" : "primary"} onClick={() => navigate(`/assessments/${assessment.id}`)}>{summary.latest ? "Review Assessment" : "Start Assessment"}</Button></div></section>; })}\n
       {percent === 100 && (
         <div className="module-complete-banner">
           <CheckCircle2 size={19} />
