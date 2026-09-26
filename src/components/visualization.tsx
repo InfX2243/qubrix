@@ -12,12 +12,12 @@ export const circuitName = (circuit: CircuitState) => {
   return match?.name ?? `${circuit.qubits}-qubit circuit`;
 };
 
-function Bar({ state, value, max, selected, onSelect }: { state: string; value: number; max: number; selected: boolean; onSelect: () => void }) {
+function Bar({ state, value, max, display, tooltip, selected, onSelect }: { state: string; value: number; max: number; display: string; tooltip: string; selected: boolean; onSelect: () => void }) {
   const width = max ? Math.max(2, (value / max) * 100) : 0;
-  return <button type="button" className={`viz-bar-row ${selected ? "is-selected" : ""}`} onClick={onSelect} aria-pressed={selected} title={`${basisLabel(state)}: ${value.toFixed(1)}%`}>
+  return <button type="button" className={`viz-bar-row ${selected ? "is-selected" : ""}`} onClick={onSelect} aria-pressed={selected} title={tooltip}>
     <span className="viz-state-label">{basisLabel(state)}</span>
     <span className="viz-bar-track"><span className="viz-bar-fill" style={{ width: `${width}%` }} /></span>
-    <strong>{value.toFixed(1)}%</strong>
+    <strong>{display}</strong>
   </button>;
 }
 
@@ -31,7 +31,7 @@ export function MeasurementHistogram({ result }: { result: SimulationResult }) {
       <button type="button" className={mode === "probability" ? "is-active" : ""} onClick={() => setMode("probability")}>Probability</button>
       <button type="button" className={mode === "count" ? "is-active" : ""} onClick={() => setMode("count")}>Counts</button>
     </div></div>
-    <div className="viz-bars" aria-label="Measurement histogram">{entries.map(([state, probability]) => <Bar key={state} state={state} value={mode === "probability" ? probability * 100 : result.measurementCounts[state] ?? 0} max={max} selected={selected === state} onSelect={() => setSelected(selected === state ? null : state)} />)}</div>
+    <div className="viz-bars" aria-label="Measurement histogram">{entries.map(([state, probability]) => <Bar key={state} state={state} value={mode === "probability" ? probability * 100 : result.measurementCounts[state] ?? 0} display={mode === "probability" ? `${(probability * 100).toFixed(1)}%` : `${(result.measurementCounts[state] ?? 0).toLocaleString()} counts`} tooltip={`${basisLabel(state)} · ${(result.measurementCounts[state] ?? 0).toLocaleString()} counts · ${(probability * 100).toFixed(1)}%`} max={max} selected={selected === state} onSelect={() => setSelected(selected === state ? null : state)} />)}</div>
     <div className="viz-data-note" aria-live="polite"><Info size={14} />{selected ? `${basisLabel(selected)} · ${(result.measurementCounts[selected] ?? 0).toLocaleString()} counts · ${((result.probabilities[selected] ?? 0) * 100).toFixed(1)}%` : "Select a state to inspect its exact count and probability."}</div>
   </Card>;
 }
