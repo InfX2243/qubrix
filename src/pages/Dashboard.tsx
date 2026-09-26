@@ -1,39 +1,44 @@
 import { ArrowRight, BookOpen, BrainCircuit, CheckCircle2, CirclePlay, Clock3, Flame, Gauge, GitBranch, Layers3, Sparkles, Target, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { activities, currentUser, dashboardStats, lessons, moduleProgress, recommendedLesson } from "../mockData";
+import { activities, currentUser, dashboardStats, getAllModuleProgress } from "../mockData";
+import { useLearning } from "../context/LearningContext";
 import { Badge, Button, Card, PageHeader, ProgressBar, SectionHeader, StatCard } from "../components/ui";
 
 export function Dashboard() {
   const navigate = useNavigate();
+  const { overallProgress, continueLesson, moduleProgress } = useLearning();
+  const continueModule = continueLesson.moduleId ? moduleProgress.find((item) => item.name === (continueLesson.moduleId === "fundamentals" ? "Quantum Computing Fundamentals" : continueLesson.moduleId === "gates" ? "Quantum Gates" : continueLesson.moduleId === "concepts" ? "Quantum Concepts" : "Quantum Algorithms")) : undefined;
+  const modulePercent = continueModule ? Math.round((continueModule.completed / continueModule.total) * 100) : 0;
+
   return (
     <div>
       <PageHeader
         eyebrow="September 26"
         title={`Welcome back, ${currentUser.name.split(" ")[0]}`}
         description="Keep building your quantum intuition. Your next breakthrough is one experiment away."
-        action={<Button variant="secondary" onClick={() => navigate("/learn")}><BookOpen size={16} /> Continue learning</Button>}
+        action={<Button variant="secondary" onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}><BookOpen size={16} /> Continue learning</Button>}
       />
 
       <section className="dashboard-hero">
         <Card className="progress-hero">
           <div className="progress-hero-copy">
             <Badge tone="purple">Your learning journey</Badge>
-            <h2>Quantum Computing Fundamentals</h2>
-            <p>You’re making steady progress through the core concepts. Continue with measurement to connect state preparation with observable outcomes.</p>
-            <ProgressBar value={currentUser.overallProgress} label="Overall completion" />
-            <Button onClick={() => navigate("/learn")}>Continue lesson <ArrowRight size={16} /></Button>
+            <h2>{continueModule?.name ?? "Quantum curriculum"}</h2>
+            <p>Continue with <strong>{continueLesson.title}</strong> to keep moving through your shared curriculum progress.</p>
+            <ProgressBar value={overallProgress} label="Overall completion" />
+            <Button onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}>Continue lesson <ArrowRight size={16} /></Button>
           </div>
-          <div className="progress-ring" aria-label={`${currentUser.overallProgress}% overall completion`}>
-            <div><strong>{currentUser.overallProgress}%</strong><span>complete</span></div>
+          <div className="progress-ring" aria-label={`${overallProgress}% overall completion`} style={{ background: `conic-gradient(var(--secondary) ${overallProgress}%, #2A3144 0)` }}>
+            <div><strong>{overallProgress}%</strong><span>complete</span></div>
           </div>
         </Card>
         <Card className="recommendation-card">
           <div className="recommendation-top"><div className="stat-icon cyan"><Sparkles size={19} /></div><Badge tone="cyan">Recommended</Badge></div>
-          <span className="card-kicker">{recommendedLesson.module}</span>
-          <h3>{recommendedLesson.title}</h3>
-          <p>{recommendedLesson.reason}</p>
-          <div className="mini-meta"><Clock3 size={15} /> {recommendedLesson.duration} <span>•</span> Beginner</div>
-          <Button variant="ghost" onClick={() => navigate("/learn")}>Open lesson <ArrowRight size={15} /></Button>
+          <span className="card-kicker">{continueModule?.name ?? "Learning"}</span>
+          <h3>{continueLesson.title}</h3>
+          <p>{continueLesson.description}</p>
+          <div className="mini-meta"><Clock3 size={15} /> {continueLesson.duration} <span>•</span> {continueLesson.difficulty}</div>
+          <Button variant="ghost" onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}>Open lesson <ArrowRight size={15} /></Button>
         </Card>
       </section>
 
@@ -50,11 +55,11 @@ export function Dashboard() {
           <Card className="lesson-card">
             <div className="lesson-visual"><span>H</span><div className="wire" /><span className="measure">M</span></div>
             <div className="lesson-content">
-              <div className="lesson-meta"><Badge tone="purple">In progress</Badge><span>8 min</span></div>
-              <h3>{lessons[0].title}</h3>
-              <p>{lessons[0].module} · Learn how the Hadamard gate creates an equal superposition.</p>
-              <ProgressBar value={lessons[0].progress} label="Lesson progress" />
-              <Button size="sm" onClick={() => navigate("/learn")}>Continue <ArrowRight size={14} /></Button>
+              <div className="lesson-meta"><Badge tone="purple">{modulePercent > 0 ? "In progress" : "Not started"}</Badge><span>{continueLesson.duration}</span></div>
+              <h3>{continueLesson.title}</h3>
+              <p>{continueModule?.name} · {continueLesson.description}</p>
+              <ProgressBar value={modulePercent} label="Module progress" />
+              <Button size="sm" onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}>Continue <ArrowRight size={14} /></Button>
             </div>
           </Card>
 
@@ -84,7 +89,7 @@ export function Dashboard() {
           <div className="quick-action-grid">
             <button className="quick-action" onClick={() => navigate("/circuit-designer")}><div className="quick-icon purple"><Layers3 size={19} /></div><span><strong>Circuit Designer</strong><small>Build visually</small></span><ArrowRight size={15} /></button>
             <button className="quick-action" onClick={() => navigate("/simulator")}><div className="quick-icon cyan"><CirclePlay size={19} /></div><span><strong>Run simulation</strong><small>Try a framework</small></span><ArrowRight size={15} /></button>
-            <button className="quick-action" onClick={() => navigate("/learn")}><div className="quick-icon navy"><BrainCircuit size={19} /></div><span><strong>Ask AI Tutor</strong><small>Get an explanation</small></span><ArrowRight size={15} /></button>
+            <button className="quick-action" onClick={() => navigate(`/learn/module/${continueLesson.moduleId}/lesson/${continueLesson.id}`)}><div className="quick-icon navy"><BrainCircuit size={19} /></div><span><strong>Ask AI Tutor</strong><small>Open lesson tutor</small></span><ArrowRight size={15} /></button>
           </div>
 
           <SectionHeader title="Assessment summary" action={<button className="text-button" onClick={() => navigate("/assessments")}>See all <ArrowRight size={14} /></button>} />
