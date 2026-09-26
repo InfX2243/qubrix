@@ -190,7 +190,7 @@ export function CircuitDesigner() {
   const [codeFramework, setCodeFramework] = useState<CodeFramework>("Qiskit");
   const [running, setRunning] = useState(false);
 
-  const { shots, setShots, setCircuit: setSimulationCircuit, setFramework: setSimulationFramework, execute: executeSimulation } = useSimulation();
+  const { shots, setShots, setCircuit: setSimulationCircuit, setFramework: setSimulationFramework, execute: executeSimulation, saveCircuit: saveSimulationCircuit } = useSimulation();
   const [runMessage, setRunMessage] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; tone?: "neutral" | "success" | "error" } | null>(null);
   
@@ -334,7 +334,15 @@ export function CircuitDesigner() {
   };
 
   const saveCircuit = () => {
-    notify("Circuit saved locally for this mock session. No backend persistence is used.", "success");
+    const error = validateCircuit(circuit);
+    if (error) {
+      notify(error, "error");
+      return;
+    }
+    saveSimulationCircuit(circuit);
+    setSimulationCircuit(circuit);
+    setSimulationFramework(framework);
+    notify("Circuit saved. It is ready to simulate from the Simulator.", "success");
   };
 
   const runCircuit = async () => {
