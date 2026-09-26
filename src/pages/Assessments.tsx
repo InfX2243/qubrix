@@ -1,3 +1,4 @@
+import "./Assessments.css";
 import { ArrowRight, CheckCircle2, Clock3, FileCode2, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge, Card, EmptyState, PageHeader, ProgressBar, SectionHeader } from "../components/ui";
